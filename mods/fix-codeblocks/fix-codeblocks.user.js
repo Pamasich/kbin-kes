@@ -1,4 +1,4 @@
-/**
+/*
  * Lemmy federates its code blocks with syntax highlighting, but /kbin doesn't currently 
  * correctly handle that. It just displays the additional <span> tags for the syntax
  * highlighting in plain text. This makes the code very hard to read.
@@ -21,47 +21,68 @@
  * - Try to make sure this doesn't replace anything within strings.
  * - Maybe make a version that makes the federated syntax highlighting functional rather 
  * than removing it.
- * 
- * @param {boolean} isActive
  */
-function fixLemmyCodeblocks (isActive) { // eslint-disable-line no-unused-vars
-    const stylePattern = "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};";
 
-    const testPattern = new RegExp(`^\\n?<span style="${stylePattern}">(.+\\n)+<\\/span>\\n?$`);
-    const startTagPattern = new RegExp(`^\\n?<span style="${stylePattern}">`);
-    const endTagPattern = new RegExp(`\\n<\\/span>\\n?$`);
-    const combinedPattern = new RegExp(`<\\/span><span style="${stylePattern}">`, "g");
+class LemmyCodeFixer {
+    static get _stylePattern () { 
+        return "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};"; 
+    }
+    static get testPattern () {
+        return new RegExp(`^\\n?<span style="${this._stylePattern}">(.+\\n)+<\\/span>\\n?$`);
+    }
+    static get startPattern () {
+        return new RegExp(`^\\n?<span style="${this._stylePattern}">`);
+    }
+    static get endPattern () {
+        return new RegExp(`\\n<\\/span>\\n?$`);
+    }
+    static get combinedPattern () {
+        return new RegExp(`<\\/span><span style="${this._stylePattern}">`, "g");
+    }
 
-    const fixedCodeAttribute = "data-fixed-code"
+    static get fixedCodeAttribute () { 
+        return "data-fixed-code"; 
+    }
 
     /** @param {HTMLElement} codeblock */
-    function fixCodeblock (codeblock) {
-        if (!testPattern.test(codeblock.textContent)) return;
-        if (codeblock.nextElementSibling?.hasAttribute(fixedCodeAttribute)) return;
+    repairCodeblock (codeblock) {
+        if (!this.testPattern.test(codeblock.textContent)) return;
+        if (codeblock.nextElementSibling?.hasAttribute(this.fixedCodeAttribute)) return;
 
         const fixedBlock = document.createElement("code");
-        fixedBlock.setAttribute(fixedCodeAttribute, "");
+        fixedBlock.setAttribute(this.fixedCodeAttribute, "");
         codeblock.after(fixedBlock);
 
         fixedBlock.textContent = codeblock.textContent
-            .replace(startTagPattern, "")
-            .replaceAll(combinedPattern, "")
-            .replace(endTagPattern, "");
+            .replace(this.startTagPattern, "")
+            .replaceAll(this.combinedPattern, "")
+            .replace(this.endTagPattern, "");
 
         codeblock.style.display = "none";
     }
 
     /** @param {HTMLElement} fixedBlock */
-    function revertCodeblock (fixedBlock) {
+    revertCodeblock (fixedBlock) {
         /** @type {HTMLElement} */
         const originalBlock = fixedBlock.previousElementSibling;
         originalBlock.style.removeProperty("display");
         fixedBlock.parentNode.removeChild(fixedBlock);
     }
 
+    repairAllCodeblocks () {
+        document.querySelectorAll("pre code").forEach(this.repairCodeblock);
+    }
+
+    revertAllCodeblocks () {
+        document.querySelectorAll(`pre code[${this.fixedCodeAttribute}]`)
+            .forEach(this.revertCodeblock);
+    }
+}
+
+function fixLemmyCodeblocks (isActive) { // eslint-disable-line no-unused-vars
     if (isActive) {
-        document.querySelectorAll("pre code").forEach(fixCodeblock);
+        LemmyCodeFixer.repairAllCodeblocks();
     } else {
-        document.querySelectorAll(`pre code[${fixedCodeAttribute}]`).forEach(revertCodeblock);
+        LemmyCodeFixer.revertAllCodeblocks();
     }
 }
