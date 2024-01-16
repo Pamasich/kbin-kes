@@ -23,34 +23,23 @@
  * than removing it.
  */
 
-class LemmyCodeFixer {
-    static get _stylePattern () { 
-        return "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};"; 
-    }
-    static get testPattern () {
-        return new RegExp(`^\\n?<span style="${this._stylePattern}">(.+\\n)+<\\/span>\\n?$`);
-    }
-    static get startPattern () {
-        return new RegExp(`^\\n?<span style="${this._stylePattern}">`);
-    }
-    static get endPattern () {
-        return new RegExp(`\\n<\\/span>\\n?$`);
-    }
-    static get combinedPattern () {
-        return new RegExp(`<\\/span><span style="${this._stylePattern}">`, "g");
-    }
+function LemmyCodeFixer () {
+    this.stylePattern = "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};";
 
-    static get fixedCodeAttribute () { 
-        return "data-fixed-code"; 
-    }
+    this.testPattern = new RegExp(`^\\n?<span style="${this.stylePattern}">(.+\\n)+<\\/span>\\n?$`);
+    this.startTagPattern = new RegExp(`^\\n?<span style="${this.stylePattern}">`);
+    this.endTagPattern = new RegExp(`\\n<\\/span>\\n?$`);
+    this.combinedPattern = new RegExp(`<\\/span><span style="${this.stylePattern}">`, "g");
+
+    this.attribute = "data-fixed-code"
 
     /** @param {HTMLElement} codeblock */
-    repairCodeblock (codeblock) {
+    this.repair = function (codeblock) {
         if (!this.testPattern.test(codeblock.textContent)) return;
-        if (codeblock.nextElementSibling?.hasAttribute(this.fixedCodeAttribute)) return;
+        if (codeblock.nextElementSibling?.hasAttribute(this.attribute)) return;
 
         const fixedBlock = document.createElement("code");
-        fixedBlock.setAttribute(this.fixedCodeAttribute, "");
+        fixedBlock.setAttribute(this.attribute, "");
         codeblock.after(fixedBlock);
 
         fixedBlock.textContent = codeblock.textContent
@@ -62,27 +51,27 @@ class LemmyCodeFixer {
     }
 
     /** @param {HTMLElement} fixedBlock */
-    revertCodeblock (fixedBlock) {
+    this.revert = function (fixedBlock) {
         /** @type {HTMLElement} */
         const originalBlock = fixedBlock.previousElementSibling;
         originalBlock.style.removeProperty("display");
         fixedBlock.parentNode.removeChild(fixedBlock);
     }
 
-    repairAllCodeblocks () {
-        document.querySelectorAll("pre code").forEach(this.repairCodeblock);
+    this.repairAll = function () {
+        document.querySelectorAll("pre code").forEach(this.repair.bind(this));
     }
 
-    revertAllCodeblocks () {
-        document.querySelectorAll(`pre code[${this.fixedCodeAttribute}]`)
-            .forEach(this.revertCodeblock);
+    this.revertAll = function () {
+        document.querySelectorAll(`pre code[${this.attribute}]`).forEach(this.revert.bind(this));
     }
 }
 
 function fixLemmyCodeblocks (isActive) { // eslint-disable-line no-unused-vars
+    const fixer = new LemmyCodeFixer();
     if (isActive) {
-        LemmyCodeFixer.repairAllCodeblocks();
+        fixer.repairAll();
     } else {
-        LemmyCodeFixer.revertAllCodeblocks();
+        fixer.revertAll();
     }
 }
