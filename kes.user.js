@@ -262,7 +262,7 @@ function constructMenu (json, layoutArr, isNew) {
         return kesPanel
     }
 
-    const kesPanel = injectSettingsButton(layoutArr, isNew)
+    injectSettingsButton(layoutArr, isNew)
 
     var keyPressed = {};
     document.addEventListener('keydown', function (e) {
