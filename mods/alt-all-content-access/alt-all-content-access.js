@@ -20,6 +20,7 @@ class AlternativeAllContentAccessMod {
 
     /** @param {boolean} isActive */
     setButtonVisibility (isActive) {
+        if (!this.getHideButtonSetting()) return;
         /** @type {HTMLElement} */
         const allContentButton = [...document.querySelectorAll(this.allContentQuery)]
             .find((element) => !element.isSameNode(this.title));
@@ -30,14 +31,14 @@ class AlternativeAllContentAccessMod {
         if (!this.currentUrl.startsWith("/*/")) {
             this.title.setAttribute("href", `/*${this.currentUrl}`);
         }
-        if (this.getHideButtonSetting()) this.setButtonVisibility(true);
+        this.setButtonVisibility(true);
     }
 
     teardown () {
         if (this.currentUrl.startsWith("/*/")) {
             this.title.setAttribute("href", `/*${this.currentUrl.slice(2)}`);
         }
-        if (this.getHideButtonSetting()) this.setButtonVisibility(false);
+        this.setButtonVisibility(false);
     }
 }
 
