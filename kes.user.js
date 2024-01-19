@@ -40,7 +40,7 @@
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/dropdown/dropdown.user.js
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/easy-emoticon/easy-emoticon.user.js
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/expand-posts/expand-posts.user.js
-// @require      https://github.com/aclist/kbin-kes/raw/testing/mods/fix-codeblocks/fix-codeblocks.user.js
+// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/fix-codeblocks/fix-codeblocks.user.js
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/hide-downvotes/hide-downvotes.user.js
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/hide-logo/hide-logo.user.js
 // @require      https://github.com/aclist/kbin-kes/raw/testing/mods/hide-posts/hide-posts.user.js
@@ -72,17 +72,17 @@
 // @resource     kes_layout https://github.com/aclist/kbin-kes/raw/testing/helpers/ui.json
 // @resource     kes_json https://github.com/aclist/kbin-kes/raw/testing/helpers/manifest.json
 // @resource     kes_css https://github.com/aclist/kbin-kes/raw/testing/helpers/kes.css
-// @downloadURL  https://github.com/aclist/kbin-kes/raw/testing/kes.user.js
-// @updateURL    https://github.com/aclist/kbin-kes/raw/testing/kes.user.js
+// @downloadURL  https://github.com/Pamasich/kbin-kes/raw/tests/kes.user.js
+// @updateURL    https://github.com/Pamasich/kbin-kes/raw/tests/kes.user.js
 // ==/UserScript==
 
 //START AUTO MASTHEAD
-/* global addMail, adjustSite, alphaSortInit, bugReportInit, checksInit, clarifyRecipientInit, dropdownEntry, easyEmoticon, expandPostsInit, fixLemmyCodeblocks, hideDownvotes, hidePostsInit, hideReputation, hideSidebar, hideThumbs, hideUpvotes, hoverIndicator, initCodeHighlights, initCollapsibleComments, initKFA, initMags, labelOp, magInstanceEntry, mobileHideInit, moreInit, moveFederationWarningEntry, navbarIcons, notificationsPanel, omniInit, rearrangeInit, softBlockInit, textResize, threadDeltaInit, toggleLogo, unblurInit, updateTime, userInstanceEntry, safeGM, getHex */
+/* global addMail, adjustSite, alphaSortInit, bugReportInit, checksInit, clarifyRecipientInit, dropdownEntry, easyEmoticon, expandPostsInit, fixLemmyCodeblocks, hideDownvotes, hidePostsInit, hideReputation, hideSidebar, hideThumbs, hideUpvotes, hoverIndicator, initCodeHighlights, initCollapsibleComments, initKFA, initMags, labelOp, magInstanceEntry, mobileHideInit, moreInit, moveFederationWarningEntry, navbarIcons, notificationsPanel, omniInit, rearrangeInit, softBlockInit, textResize, threadDeltaInit, toggleLogo, unblurInit, updateTime, userInstanceEntry */
 
 const version = safeGM("info").script.version;
 const tool = safeGM("info").script.name;
-const repositoryURL = "https://github.com/aclist/kbin-kes/";
-const branch = "testing"
+const repositoryURL = "https://github.com/Pamasich/kbin-kes/";
+const branch = "tests"
 const helpersPath = "helpers/"
 const branchPath = repositoryURL + "raw/" + branch + "/"
 const versionFile = branchPath + "VERSION";
@@ -262,7 +262,7 @@ function constructMenu (json, layoutArr, isNew) {
         return kesPanel
     }
 
-    kesPanel = injectSettingsButton(layoutArr, isNew)
+    const kesPanel = injectSettingsButton(layoutArr, isNew)
 
     var keyPressed = {};
     document.addEventListener('keydown', function (e) {
@@ -899,7 +899,7 @@ function constructMenu (json, layoutArr, isNew) {
             const names = parseNamespaces();
             const keys = Object.keys(contents);
             cleanNamespaces();
-            for(i = 0 ; i < keys.length ; ++i) {
+            for(let i = 0 ; i < keys.length ; ++i) {
                 if(keys[i] === "kes-settings" || names.includes(keys[i])) {
                     let namespace = keys[i];
                     let settings = contents[namespace];
@@ -1043,7 +1043,7 @@ function constructMenu (json, layoutArr, isNew) {
             //:isnew
             //if (json[i].newsince == version)
             let label
-            for (i = 0; i < json.length; ++i) {
+            for (let i = 0; i < json.length; ++i) {
                 const origLabel = json[i].label
                 const labelLower = origLabel.toLowerCase();
                 const queryLower = query.toLowerCase();
