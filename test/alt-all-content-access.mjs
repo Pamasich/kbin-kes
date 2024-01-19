@@ -12,12 +12,28 @@ describe ("alt-all-content-access", function () {
     })
 
     describe ("setButtonVisibility", function () {
-        it ("shouldAbortIfSettingIsTurnedOff", function () {
+        it ("should abort if the setting is turned off", function () {
             document.mod.getHideButtonSetting = () => false;
             const dummyButton = document.createElement("div");
             document.mod.getAllContentButton = () => dummyButton;
             document.mod.setButtonVisibility (true);
-            assert.ok(dummyButton.style.display != "none");
+            assert.notEqual(dummyButton.style.display, "none");
+        })
+
+        it ("should hide the button if the mod is active", function () {
+            document.mod.getHideButtonSetting = () => true;
+            const dummyButton = document.createElement("div");
+            document.mod.getAllContentButton = () => dummyButton;
+            document.mod.setButtonVisibility (true);
+            assert.equal(dummyButton.style.display, "none");
+        })
+
+        it ("should reset the button if the mod is turned off", function () {
+            document.mod.getHideButtonSetting = () => true;
+            const dummyButton = document.createElement("div");
+            document.mod.getAllContentButton = () => dummyButton;
+            document.mod.setButtonVisibility (false);
+            assert.equal(dummyButton.style.display, "");
         })
     })
 })
