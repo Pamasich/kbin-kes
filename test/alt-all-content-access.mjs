@@ -112,7 +112,7 @@ describe ("alt-all-content-access", function () {
             document.mod.setup();
             assert.equal(called, true);
         })
-        it ("works in practice", async function() {
+        it ("works in practice", async function () {
             document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
@@ -141,7 +141,7 @@ describe ("alt-all-content-access", function () {
             document.mod.teardown();
             assert.equal(called, false);
         })
-        it ("works in practice", async function() {
+        it ("works in practice", async function () {
             document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             const originalLink = document.mod.getTitle().getAttribute("href");
