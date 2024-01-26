@@ -4,6 +4,7 @@
     },
     "dependencies": {
         "jsdom": "^23.2.0",
+        "mocha": "^10.2.0",
         "prettier": "^3.1.1",
         "randexp": "^0.5.3"
     }

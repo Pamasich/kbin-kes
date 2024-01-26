@@ -1,6 +1,5 @@
-/* globals describe, it, beforeEach */ 
-
 import assert from "assert";
+import { describe, it, beforeEach } from "mocha";
 import { setup } from "./api.mjs";
 
 /** @type {Document} */
@@ -118,6 +117,11 @@ describe ("alt-all-content-access", function () {
             document.mod.setup();
             assert.ok(document.mod.getTitle().getAttribute("href").startsWith("/*/"));
             assert.ok(document.mod.getAllContentButton().style.display == "none");
+        })
+        it ("can handle pages that lack the title (like /all)", async function () {
+            document = await setup(modId, modClass);
+            document.mod.getHideButtonSetting = () => true;
+            document.mod.setup();
         })
     })
 
