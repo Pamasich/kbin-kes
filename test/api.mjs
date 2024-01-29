@@ -1,6 +1,5 @@
-/* globals process */
-
 import { JSDOM } from "jsdom";
+import process from "node:process";
 
 /**
  * @param {String} mod 
