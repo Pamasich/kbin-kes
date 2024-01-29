@@ -69,6 +69,7 @@
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/timestamp/timestamp.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/unblur/unblur.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/user-instance-names/user-instance-names.user.js
+// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alt-all-content-access/alt-all-content-access.user.js
 // @resource     kes_layout https://github.com/Pamasich/kbin-kes/raw/tests/helpers/ui.json
 // @resource     kes_json https://github.com/Pamasich/kbin-kes/raw/tests/helpers/manifest.json
 // @resource     kes_css https://github.com/Pamasich/kbin-kes/raw/tests/helpers/kes.css
@@ -77,7 +78,7 @@
 // ==/UserScript==
 
 //START AUTO MASTHEAD
-/* global addMail, adjustSite, alphaSortInit, bugReportInit, checksInit, clarifyRecipientInit, dropdownEntry, easyEmoticon, expandPostsInit, fixLemmyCodeblocks, hideDownvotes, hidePostsInit, hideReputation, hideSidebar, hideThumbs, hideUpvotes, hoverIndicator, initCodeHighlights, initCollapsibleComments, initKFA, initMags, labelOp, magInstanceEntry, mobileHideInit, moreInit, moveFederationWarningEntry, navbarIcons, notificationsPanel, omniInit, rearrangeInit, softBlockInit, textResize, threadDeltaInit, toggleLogo, unblurInit, updateTime, userInstanceEntry */
+/* global addMail, altAllContentAccess, adjustSite, alphaSortInit, bugReportInit, checksInit, clarifyRecipientInit, dropdownEntry, easyEmoticon, expandPostsInit, fixLemmyCodeblocks, hideDownvotes, hidePostsInit, hideReputation, hideSidebar, hideThumbs, hideUpvotes, hoverIndicator, initCodeHighlights, initCollapsibleComments, initKFA, initMags, labelOp, magInstanceEntry, mobileHideInit, moreInit, moveFederationWarningEntry, navbarIcons, notificationsPanel, omniInit, rearrangeInit, softBlockInit, textResize, threadDeltaInit, toggleLogo, unblurInit, updateTime, userInstanceEntry */
 
 const version = safeGM("info").script.version;
 const tool = safeGM("info").script.name;
@@ -134,7 +135,8 @@ const funcObj = {
     toggleLogo: toggleLogo,
     unblurInit: unblurInit,
     updateTime: updateTime,
-    userInstanceEntry: userInstanceEntry
+    userInstanceEntry: userInstanceEntry,
+    altAllContentAccess: altAllContentAccess
 };
 //END AUTO MASTHEAD
 
