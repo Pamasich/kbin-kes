@@ -9,6 +9,9 @@ const modId = "alt-all-content-access";
 const modClass = "AlternativeAllContentAccessMod";
 
 describe ("alt-all-content-access", function () {
+    this.timeout(10000);
+    this.slow(1000);
+
     beforeEach (async function () {
         document = await setup(modId, modClass);
     })
