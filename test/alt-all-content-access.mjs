@@ -98,6 +98,7 @@ describe ("alt-all-content-access", function () {
             title.setAttribute("href", "/m/example");
             document.mod.getTitle = () => [title];
             document.mod.setButtonVisibility = () => null;
+            document.mod.isCurrentViewCollection = () => false;
             document.mod.setup();
             assert.equal(title.getAttribute("href"), "/*/m/example");
         })
@@ -106,9 +107,29 @@ describe ("alt-all-content-access", function () {
             title.setAttribute("href", "/m/example");
             document.mod.getTitle = () => [title];
             document.mod.setButtonVisibility = () => null;
+            document.mod.isCurrentViewCollection = () => false;
             document.mod.setup();
             document.mod.setup();
             assert.equal(title.getAttribute("href"), "/*/m/example");
+        })
+        it ("changes the collection title's link correctly", function () {
+            const title = document.createElement("a");
+            title.setAttribute("href", "/c/example");
+            document.mod.getTitle = () => [title];
+            document.mod.setButtonVisibility = () => null;
+            document.mod.isCurrentViewCollection = () => true;
+            document.mod.setup();
+            assert.equal(title.getAttribute("href"), "/c/example/*");
+        })
+        it ("changes the collection title's link correctly when run multiple times", function () {
+            const title = document.createElement("a");
+            title.setAttribute("href", "/c/example");
+            document.mod.getTitle = () => [title];
+            document.mod.setButtonVisibility = () => null;
+            document.mod.isCurrentViewCollection = () => true;
+            document.mod.setup();
+            document.mod.setup();
+            assert.equal(title.getAttribute("href"), "/c/example/*");
         })
         it ("calls the setButtonVisibility function", function () {
             let called = undefined;
@@ -116,6 +137,7 @@ describe ("alt-all-content-access", function () {
             title.setAttribute("href", "/m/example");
             document.mod.getTitle = () => [title];
             document.mod.setButtonVisibility = (isActive) => called = isActive;
+            document.mod.isCurrentViewCollection = () => false;
             document.mod.setup();
             assert.equal(called, true);
         })
@@ -161,10 +183,22 @@ describe ("alt-all-content-access", function () {
             title.setAttribute("href", "/m/example");
             document.mod.getTitle = () => [title];
             document.mod.setButtonVisibility = () => null;
-            // to make sure we actually get the original one back, setup needs to be run first
+            document.mod.isCurrentViewCollection = () => false;
+            // to check that we actually get the original one back, setup needs to be run first
             document.mod.setup(); 
             document.mod.teardown();
             assert.equal(title.getAttribute("href"), "/m/example");
+        })
+        it ("restores the original collection title", function () {
+            const title = document.createElement("a");
+            title.setAttribute("href", "/c/example");
+            document.mod.getTitle = () => [title];
+            document.mod.setButtonVisibility = () => null;
+            document.mod.isCurrentViewCollection = () => true;
+            // to check that we actually get the original one back, setup needs to be run first
+            document.mod.setup(); 
+            document.mod.teardown();
+            assert.equal(title.getAttribute("href"), "/c/example");
         })
         it ("calls the setButtonVisibility function", function () {
             let called = undefined;
