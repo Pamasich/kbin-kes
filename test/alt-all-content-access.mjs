@@ -145,7 +145,7 @@ describe ("alt-all-content-access", function () {
             const titleList = document.mod.getTitle();
             assert.ok(titleList.length == 2);
             titleList.forEach((title) => {
-                assert.ok(title.getAttribute("href").startsWith("/*/"));
+                assert.ok(title.getAttribute("href").endsWith("/*"));
             })
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
