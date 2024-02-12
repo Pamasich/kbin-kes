@@ -193,5 +193,23 @@ describe ("alt-all-content-access", function () {
                 assert.equal(button.style.display, originalStyle);
             })
         })
+        it ("restores correctly on collection pages", async function () {
+            document = await setup(modId, modClass, "https://kbin.social/c/kbin");
+            document.mod.getHideButtonSetting = () => true;
+            const titleList = document.mod.getTitle();
+            const buttonList = document.mod.getAllContentButton();
+            assert.ok(titleList.length == 2);
+            assert.ok(buttonList.length == 2);
+            const originalLink = titleList[0].getAttribute("href");
+            const originalStyle = buttonList[0].style.display;
+            document.mod.setup();
+            document.mod.teardown();
+            titleList.forEach((title) => {
+                assert.equal(title.getAttribute("href"), originalLink);
+            })
+            buttonList.forEach((button) => {
+                assert.equal(button.style.display, originalStyle);
+            })
+        })
     })
 })
