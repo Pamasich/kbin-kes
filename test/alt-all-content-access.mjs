@@ -135,9 +135,23 @@ describe ("alt-all-content-access", function () {
             })
         })
         it ("can handle pages that lack the title (like /all)", async function () {
-            document = await setup(modId, modClass);
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
+        })
+        it ("works with collections (/c/)", async function () {
+            document = await setup(modId, modClass, "https://kbin.social/c/kbin");
+            document.mod.getHideButtonSetting = () => true;
+            document.mod.setup();
+            const titleList = document.mod.getTitle();
+            assert.ok(titleList.length == 2);
+            titleList.forEach((title) => {
+                assert.ok(title.getAttribute("href").startsWith("/*/"));
+            })
+            const buttonList = document.mod.getAllContentButton();
+            assert.ok(buttonList.length == 2);
+            buttonList.forEach((button) => {
+                assert.ok(button.style.display == "none");
+            })
         })
     })
 
