@@ -19,27 +19,30 @@ describe ("alt-all-content-access", function () {
     describe ("setButtonVisibility", function () {
         it ("should hide the button while the setting is turned on", function () {
             document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("div");
+            const dummyButton = document.createElement("a");
+            document.createElement("div").appendChild(dummyButton);
             document.mod.getAllContentButton = () => [dummyButton];
             document.mod.setButtonVisibility(true);
-            assert.equal(dummyButton.style.display, "none");
+            assert.equal(dummyButton.parentNode.style.display, "none");
         })
         it ("should show the button again after the setting has been turned off", function () {
             document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("div");
+            const dummyButton = document.createElement("a");
+            document.createElement("div").appendChild(dummyButton);
             document.mod.getAllContentButton = () => [dummyButton];
             document.mod.setButtonVisibility(true);
             document.mod.getHideButtonSetting = () => false;
             document.mod.setButtonVisibility(true);
-            assert.notEqual(dummyButton.style.display, "none");
+            assert.notEqual(dummyButton.parentNode.style.display, "none");
         })
         it ("should show the button again after the mod is disabled", function () {
             document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("div");
+            const dummyButton = document.createElement("a");
+            document.createElement("div").appendChild(dummyButton);
             document.mod.getAllContentButton = () => [dummyButton];
             document.mod.setButtonVisibility(true);
             document.mod.setButtonVisibility(false);
-            assert.equal(dummyButton.style.display, "");
+            assert.equal(dummyButton.parentNode.style.display, "");
         })
     })
 
@@ -156,7 +159,7 @@ describe ("alt-all-content-access", function () {
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
             buttonList.forEach((button) => {
-                assert.ok(button.style.display == "none");
+                assert.ok(button.parentNode.style.display == "none");
             })
         })
         it ("can handle pages that lack the title (like /all)", async function () {
@@ -175,7 +178,7 @@ describe ("alt-all-content-access", function () {
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
             buttonList.forEach((button) => {
-                assert.ok(button.style.display == "none");
+                assert.ok(button.parentNode.style.display == "none");
             })
         })
     })
