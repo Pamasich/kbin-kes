@@ -162,7 +162,7 @@ describe ("alt-all-content-access", function () {
                 assert.ok(button.parentNode.style.display == "none");
             })
         })
-        it ("can handle pages that lack the title (like /all)", async function () {
+        it ("can handle pages that lack the title (like /all)", function () {
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
         })
