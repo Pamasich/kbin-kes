@@ -74,7 +74,7 @@ describe ("alt-all-content-access", function () {
     describe ("getAllContentButton", function () {
         it ("still retrieves the correct elements", async function () {
             const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
-            /** @type {HTMLElement} */
+            /** @type {HTMLElement[]} */
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
             buttonList.forEach((button) => {
@@ -86,7 +86,7 @@ describe ("alt-all-content-access", function () {
             const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
-            /** @type {HTMLElement} */
+            /** @type {HTMLElement[]} */
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
             buttonList.forEach((button) => {
