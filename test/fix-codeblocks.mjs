@@ -1,7 +1,6 @@
-/* globals describe, it, beforeEach */ 
-
 import assert from "assert";
 import RandExp from "randexp";
+import { describe, it, beforeEach } from "mocha";
 import { setup } from "./api.mjs";
 
 const modId = "fix-codeblocks";
