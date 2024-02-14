@@ -4,9 +4,6 @@ import assert from "assert";
 import RandExp from "randexp";
 import { setup } from "./api.mjs";
 
-/** @type {Document} */
-let document = undefined;
-
 const modId = "fix-codeblocks";
 const modClass = "FixLemmyCodeblocksMod";
 
@@ -15,8 +12,9 @@ describe ("fix-codeblocks", function () {
     this.slow(1000);
 
     beforeEach (async function () {
-        document = await setup(modId, modClass);
-        this.mod = document.mod;
+        /** @type {Document} */
+        this.document = await setup(modId, modClass);
+        this.mod = this.document.mod;
     })
 
     describe ("getStylePattern", function () {
@@ -40,9 +38,9 @@ describe ("fix-codeblocks", function () {
         })
         it ("should not match if other properties are present", function () {
             let style = 'color:#222222;background-color:#333333;';
-            assert.doesNotMatch(style, new RegExp(`^${document.mod.getStylePattern()}$`));
+            assert.doesNotMatch(style, new RegExp(`^${this.mod.getStylePattern()}$`));
             style = 'margin-left:3px;color:#434343;';
-            assert.doesNotMatch(style, new RegExp(`^${document.mod.getStylePattern()}$`));
+            assert.doesNotMatch(style, new RegExp(`^${this.mod.getStylePattern()}$`));
         })
         it ("should not match if the color is not given in hexadecimal", function () {
             assert.doesNotMatch('color:rgb(255,255,255);', this.styleRegex);
@@ -53,8 +51,8 @@ describe ("fix-codeblocks", function () {
             assert.doesNotMatch('color: #222222;', this.styleRegex);
         })
         it ("should not check for the start or end of a string", function () {
-            assert.ok(!document.mod.getStylePattern().startsWith('^'));
-            assert.ok(!document.mod.getStylePattern().endsWith('$'));
+            assert.ok(!this.mod.getStylePattern().startsWith('^'));
+            assert.ok(!this.mod.getStylePattern().endsWith('$'));
         })
     })
 })

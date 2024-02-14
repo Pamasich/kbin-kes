@@ -2,9 +2,6 @@ import assert from "assert";
 import { describe, it, beforeEach } from "mocha";
 import { setup } from "./api.mjs";
 
-/** @type {Document} */
-let document = undefined;
-
 const modId = "alt-all-content-access";
 const modClass = "AlternativeAllContentAccessMod";
 
@@ -13,42 +10,43 @@ describe ("alt-all-content-access", function () {
     this.slow(1000);
 
     beforeEach (async function () {
-        document = await setup(modId, modClass);
+        this.document = await setup(modId, modClass);
+        this.mod = this.document.mod;
     })
 
     describe ("setButtonVisibility", function () {
         it ("should hide the button while the setting is turned on", function () {
-            document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("a");
-            document.createElement("div").appendChild(dummyButton);
-            document.mod.getAllContentButton = () => [dummyButton];
-            document.mod.setButtonVisibility(true);
+            this.mod.getHideButtonSetting = () => true;
+            const dummyButton = this.document.createElement("a");
+            this.document.createElement("div").appendChild(dummyButton);
+            this.mod.getAllContentButton = () => [dummyButton];
+            this.mod.setButtonVisibility(true);
             assert.equal(dummyButton.parentNode.style.display, "none");
         })
         it ("should show the button again after the setting has been turned off", function () {
-            document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("a");
-            document.createElement("div").appendChild(dummyButton);
-            document.mod.getAllContentButton = () => [dummyButton];
-            document.mod.setButtonVisibility(true);
-            document.mod.getHideButtonSetting = () => false;
-            document.mod.setButtonVisibility(true);
+            this.mod.getHideButtonSetting = () => true;
+            const dummyButton = this.document.createElement("a");
+            this.document.createElement("div").appendChild(dummyButton);
+            this.mod.getAllContentButton = () => [dummyButton];
+            this.mod.setButtonVisibility(true);
+            this.mod.getHideButtonSetting = () => false;
+            this.mod.setButtonVisibility(true);
             assert.notEqual(dummyButton.parentNode.style.display, "none");
         })
         it ("should show the button again after the mod is disabled", function () {
-            document.mod.getHideButtonSetting = () => true;
-            const dummyButton = document.createElement("a");
-            document.createElement("div").appendChild(dummyButton);
-            document.mod.getAllContentButton = () => [dummyButton];
-            document.mod.setButtonVisibility(true);
-            document.mod.setButtonVisibility(false);
+            this.mod.getHideButtonSetting = () => true;
+            const dummyButton = this.document.createElement("a");
+            this.document.createElement("div").appendChild(dummyButton);
+            this.mod.getAllContentButton = () => [dummyButton];
+            this.mod.setButtonVisibility(true);
+            this.mod.setButtonVisibility(false);
             assert.equal(dummyButton.parentNode.style.display, "");
         })
     })
 
     describe ("getTitle", function () {
         it ("still retrieves the correct elements", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             /** @type {HTMLElement} */
             const titleList = document.mod.getTitle();
             assert.ok(titleList.length == 2);
@@ -59,7 +57,7 @@ describe ("alt-all-content-access", function () {
             });
         })
         it ("still retrieves the correct elements when run multiple times", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
             /** @type {HTMLElement} */
@@ -75,7 +73,7 @@ describe ("alt-all-content-access", function () {
 
     describe ("getAllContentButton", function () {
         it ("still retrieves the correct elements", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             /** @type {HTMLElement} */
             const buttonList = document.mod.getAllContentButton();
             assert.ok(buttonList.length == 2);
@@ -85,7 +83,7 @@ describe ("alt-all-content-access", function () {
             });
         })
         it ("still retrieves the correct elements when run multiple times", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
             /** @type {HTMLElement} */
@@ -100,55 +98,55 @@ describe ("alt-all-content-access", function () {
 
     describe ("setup", function () {
         it ("changes the magazine title's link correctly", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/m/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => false;
-            document.mod.setup();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => false;
+            this.mod.setup();
             assert.equal(title.getAttribute("href"), "/*/m/example");
         })
         it ("changes the magazine title's link correctly when run multiple times", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/m/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => false;
-            document.mod.setup();
-            document.mod.setup();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => false;
+            this.mod.setup();
+            this.mod.setup();
             assert.equal(title.getAttribute("href"), "/*/m/example");
         })
         it ("changes the collection title's link correctly", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/c/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => true;
-            document.mod.setup();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => true;
+            this.mod.setup();
             assert.equal(title.getAttribute("href"), "/c/example/*");
         })
         it ("changes the collection title's link correctly when run multiple times", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/c/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => true;
-            document.mod.setup();
-            document.mod.setup();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => true;
+            this.mod.setup();
+            this.mod.setup();
             assert.equal(title.getAttribute("href"), "/c/example/*");
         })
         it ("calls the setButtonVisibility function", function () {
             let called = undefined;
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/m/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = (isActive) => called = isActive;
-            document.mod.isCurrentViewCollection = () => false;
-            document.mod.setup();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = (isActive) => called = isActive;
+            this.mod.isCurrentViewCollection = () => false;
+            this.mod.setup();
             assert.equal(called, true);
         })
         it ("works in practice", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
             const titleList = document.mod.getTitle();
@@ -163,11 +161,11 @@ describe ("alt-all-content-access", function () {
             })
         })
         it ("can handle pages that lack the title (like /all)", function () {
-            document.mod.getHideButtonSetting = () => true;
-            document.mod.setup();
+            this.mod.getHideButtonSetting = () => true;
+            this.mod.setup();
         })
         it ("works with collections (/c/)", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/c/kbin");
+            const document = await setup(modId, modClass, "https://kbin.social/c/kbin");
             document.mod.getHideButtonSetting = () => true;
             document.mod.setup();
             const titleList = document.mod.getTitle();
@@ -185,38 +183,38 @@ describe ("alt-all-content-access", function () {
 
     describe ("teardown", function () {
         it ("restores the original magazine title", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/m/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => false;
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => false;
             // to check that we actually get the original one back, setup needs to be run first
-            document.mod.setup(); 
-            document.mod.teardown();
+            this.mod.setup(); 
+            this.mod.teardown();
             assert.equal(title.getAttribute("href"), "/m/example");
         })
         it ("restores the original collection title", function () {
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/c/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = () => null;
-            document.mod.isCurrentViewCollection = () => true;
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = () => null;
+            this.mod.isCurrentViewCollection = () => true;
             // to check that we actually get the original one back, setup needs to be run first
-            document.mod.setup(); 
-            document.mod.teardown();
+            this.mod.setup(); 
+            this.mod.teardown();
             assert.equal(title.getAttribute("href"), "/c/example");
         })
         it ("calls the setButtonVisibility function", function () {
             let called = undefined;
-            const title = document.createElement("a");
+            const title = this.document.createElement("a");
             title.setAttribute("href", "/m/example");
-            document.mod.getTitle = () => [title];
-            document.mod.setButtonVisibility = (isActive) => called = isActive;
-            document.mod.teardown();
+            this.mod.getTitle = () => [title];
+            this.mod.setButtonVisibility = (isActive) => called = isActive;
+            this.mod.teardown();
             assert.equal(called, false);
         })
         it ("works in practice", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
+            const document = await setup(modId, modClass, "https://kbin.social/m/kbinmeta");
             document.mod.getHideButtonSetting = () => true;
             const titleList = document.mod.getTitle();
             const buttonList = document.mod.getAllContentButton();
@@ -234,7 +232,7 @@ describe ("alt-all-content-access", function () {
             })
         })
         it ("restores correctly on collection pages", async function () {
-            document = await setup(modId, modClass, "https://kbin.social/c/kbin");
+            const document = await setup(modId, modClass, "https://kbin.social/c/kbin");
             document.mod.getHideButtonSetting = () => true;
             const titleList = document.mod.getTitle();
             const buttonList = document.mod.getAllContentButton();
