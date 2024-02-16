@@ -55,14 +55,14 @@ describe ("fix-codeblocks", function () {
     })
 
     describe ("getCodeBlocks", function () {
-        it.skip ("still retrieves the expected elements", async function () {
+        it ("still retrieves the expected elements", async function () {
             const link = "https://kbin.social/m/programming@programming.dev/t/726929";
             const document = await setup(modId, modClass, link);
             /** @type {HTMLElement[]} */
             const codeblocks = document.mod.getCodeBlocks();
             assert.equal(codeblocks.length, 2);
         })
-        it.skip ("still retrieves the expected elements when run multiple times", async function () {
+        it ("still retrieves the expected elements when run multiple times", async function () {
             const link = "https://kbin.social/m/programming@programming.dev/t/726929";
             const document = await setup(modId, modClass, link);
             document.mod.setup();
@@ -141,10 +141,68 @@ describe ("fix-codeblocks", function () {
     })
 
     describe ("setup", function () {
-        // TODO: add integration tests for single and repeated use when kbin works again
+        beforeEach (async function () {
+            const link = "https://kbin.social/m/programming@programming.dev/t/726929";
+            this.document = await setup(modId, modClass, link);
+            /** @type {HTMLElement[]} */
+            this.blocks = this.document.mod.getCodeBlocks();
+            assert.equal(this.blocks.length, 2);
+            assert.ok(this.blocks.every((code) => this.document.mod.isErroneousCode(code)));
+        })
+
+        it ("works in practice", async function () {
+            this.document.mod.setup();
+            /** @type {HTMLElement[]} */
+            const fixed = this.document.mod.getCodeBlocks(true);
+            assert.equal(fixed.length, 2);
+            assert.ok(fixed.every((code) => !this.document.mod.isErroneousCode(code)));
+            assert.ok(this.blocks.every((code) => this.document.mod.isErroneousCode(code)));
+            assert.ok(this.blocks.every((code) => this.document.mod.isFixed(code)));
+        })
+        it ("works repeatedly", function () {
+            this.document.mod.setup();
+            this.document.mod.setup();
+            /** @type {HTMLElement[]} */
+            const fixed = this.document.mod.getCodeBlocks(true);
+            assert.equal(fixed.length, 2);
+            assert.ok(fixed.every((code) => !this.document.mod.isErroneousCode(code)));
+            assert.ok(this.blocks.every((code) => this.document.mod.isErroneousCode(code)));
+            assert.ok(this.blocks.every((code) => this.document.mod.isFixed(code)));
+        })
     })
 
     describe ("teardown", function () {
-        // TODO: add integration tests for single and repeated use when kbin works again
+        it ("ensure the original page is restored", async function () {
+            // setup
+            const link = "https://kbin.social/m/programming@programming.dev/t/726929";
+            const document = await setup(modId, modClass, link);
+            /** @type {HTMLElement[]} */
+            let blocks = document.mod.getCodeBlocks();
+            // ensure the page was correctly loaded and all elements necessary to the test
+            // are in order
+            assert.equal(blocks.length, 2);
+            assert.ok(blocks.every((code) => document.mod.isErroneousCode(code)));
+            const originalCode = blocks.map((code) => code.textContent);
+            // fix the codeblocks
+            document.mod.setup();
+            /** @type {HTMLElement[]} */
+            const fixed = document.mod.getCodeBlocks(true);
+            // ensure the codeblocks have been fixed
+            assert.equal(fixed.length, 2);
+            assert.ok(fixed.every((code) => !document.mod.isErroneousCode(code)));
+            assert.ok(blocks.every((code) => document.mod.isErroneousCode(code)));
+            assert.ok(blocks.every((code) => document.mod.isFixed(code)));
+            // revert the fix
+            document.mod.teardown();
+            // check if everything is back to normal
+            /** @type {HTMLElement[]} */
+            blocks = document.mod.getCodeBlocks();
+            assert.equal(blocks.length, 2);
+            assert.ok(blocks.every((code) => document.mod.isErroneousCode(code)));
+            blocks.forEach((code) => {
+                assert.equal(code.textContent, originalCode[blocks.indexOf(code)]);
+                assert.ok(code.style.display != "none");
+            });
+        })
     })
 })
