@@ -11,7 +11,6 @@ describe ("fix-codeblocks", function () {
     this.slow(1000);
 
     beforeEach (async function () {
-        /** @type {Document} */
         this.document = await setup(modId, modClass);
         this.mod = this.document.mod;
     })
@@ -53,5 +52,99 @@ describe ("fix-codeblocks", function () {
             assert.ok(!this.mod.getStylePattern().startsWith('^'));
             assert.ok(!this.mod.getStylePattern().endsWith('$'));
         })
+    })
+
+    describe ("getCodeBlocks", function () {
+        it.skip ("still retrieves the expected elements", async function () {
+            const link = "https://kbin.social/m/programming@programming.dev/t/726929";
+            const document = await setup(modId, modClass, link);
+            /** @type {HTMLElement[]} */
+            const codeblocks = document.mod.getCodeBlocks();
+            assert.equal(codeblocks.length, 2);
+        })
+        it.skip ("still retrieves the expected elements when run multiple times", async function () {
+            const link = "https://kbin.social/m/programming@programming.dev/t/726929";
+            const document = await setup(modId, modClass, link);
+            document.mod.setup();
+            /** @type {HTMLElement[]} */
+            const codeblocks = document.mod.getCodeBlocks();
+            assert.equal(codeblocks.length, 4);
+        })
+        it ("retrieves only already fixed code blocks when asked to", function () {
+            /** @type {HTMLElement} */
+            const pre = this.document.createElement("pre");
+            pre.appendChild(this.document.createElement("code"));
+            const fixedCode = this.document.createElement("code");
+            fixedCode.setAttribute(this.mod.getFixedCodeAttributeName(), "");
+            pre.appendChild(fixedCode);
+            pre.appendChild(this.document.createElement("code"));
+            this.document.querySelector("body").appendChild(pre);
+            const codeblocks = this.mod.getCodeBlocks(true);
+            assert.equal(codeblocks.length, 1);
+        })
+    })
+
+    describe ("isErroneousCode", function () {
+        it ("correctly differentiates between correct and erroneous blocks", function () {
+            const code = this.document.createElement("code");
+            const linePrefix = '<span style="font-style:italic;color:#666666;">';
+            code.textContent = "\n"
+                + `${linePrefix}public class Test {\n`
+                + `</span>${linePrefix}   int example1 = 0;\n`
+                + `</span>${linePrefix}   int example2 = 1;\n`
+                + `</span>${linePrefix}}\n`
+                + "</span>";
+            assert.ok(this.mod.isErroneousCode(code), "false negative");
+            code.textContent = "public class Test {\n"
+                + "   int example1 = 0;\n"
+                + "   int example2 = 1;\n"
+                + "}";
+            assert.ok(!this.mod.isErroneousCode(code), "false positive");
+        })
+    })
+
+    describe ("isFixed", function () {
+        it ("correctly identifies an already fixed block", function () {
+            const container = this.document.createElement("pre");
+            const buggyCode = this.document.createElement("code");
+            container.appendChild(buggyCode);
+            assert.ok(!this.mod.isFixed(buggyCode), "false positive");
+            const fixedCode = this.document.createElement("code");
+            fixedCode.setAttribute(this.mod.getFixedCodeAttributeName(), "");
+            buggyCode.after(fixedCode);
+            assert.ok(this.mod.isFixed(buggyCode), "false negative");
+        })
+    })
+
+    describe ("fix", function () {
+        it ("correctly fixes the block", function () {
+            const code = this.document.createElement("code");
+            this.document.querySelector("body").appendChild(code);
+            const linePrefix = '<span style="font-style:italic;color:#666666;">';
+            code.textContent = "\n"
+                + `${linePrefix}public class Test {\n`
+                + `</span>${linePrefix}   int example1 = 0;\n`
+                + `</span>${linePrefix}   int example2 = 1;\n`
+                + `</span>${linePrefix}}\n`
+                + "</span>";
+            this.mod.fix(code);
+            assert.equal(this.document.querySelectorAll("code").length, 2);
+            assert.equal(code.style.display, "none");
+            assert.equal(
+                code.nextElementSibling.textContent, 
+                "public class Test {\n"
+                + "   int example1 = 0;\n"
+                + "   int example2 = 1;\n"
+                + "}"
+            );
+        }) 
+    })
+
+    describe ("setup", function () {
+        // TODO: add integration tests for single and repeated use when kbin works again
+    })
+
+    describe ("teardown", function () {
+        // TODO: add integration tests for single and repeated use when kbin works again
     })
 })
