@@ -28,14 +28,14 @@ owner first, if they're still active.
 When I decide to tackle an issue, I move it to the `Planned` column of the board and write **two lists** as a comment on
 the issue:
 
-1. A list of actionable goals to achieve for now
+1. A list of clear goals to achieve for now
 2. What actions to take after completing all the aforementioned goals
 
 This might look like the following example:
 
 > Currently planned goals:
 > 
-> - Adjust the readme
+> - Add to the readme an explanation of the `requires-approval` label
 >
 > Then:
 >
