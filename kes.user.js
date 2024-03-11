@@ -30,55 +30,55 @@
 // @icon         https://kbin.social/favicon.svg
 // @connect      raw.githubusercontent.com
 // @connect      github.com
-// @require      https://github.com/Pamasich/kbin-kes/raw/testing/helpers/safegm.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/testing/helpers/kbin-mod-options.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/testing/helpers/safegm.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/testing/helpers/kbin-mod-options.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js
 // @require      http://code.jquery.com/jquery-3.4.1.min.js
 /* eslint-disable max-len */
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/adjust/adjust.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alpha-sort-subs/alpha-sort-subs.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/always-more/always-more.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/clarify-recipient/clarify-recipient.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/code-highlighting/code-highlighting.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/dropdown/dropdown.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/easy-emoticon/easy-emoticon.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/expand-posts/expand-posts.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/fix-codeblocks/fix-codeblocks.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-downvotes/hide-downvotes.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-logo/hide-logo.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-posts/hide-posts.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-reputation/hide-reputation.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-sidebar/hide-sidebar.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-thumbs/hide-thumbs.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hide-upvotes/hide-upvotes.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/hover-indicator/hover-indicator.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/improved-collapsible-comments/improved-collapsible-comments.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/kbin-federation-awareness/kbin-federation-awareness.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/label/label.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/mag-instance-names/mag-instance-names.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/mail/mail.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/mobile-cleanup/mobile-cleanup.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/move-federation-warning/move-federation-warning.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/nav-icons/nav-icons.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/notifications-panel/notifications-panel.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/omni/omni.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/rearrange/rearrange.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/report-bug/report-bug.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/resize-text/resize-text.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/softblock/softblock.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/subs/subs.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/thread-checkmarks/thread-checkmarks.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/thread-delta/thread-delta.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/timestamp/timestamp.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/unblur/unblur.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/user-instance-names/user-instance-names.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/adjust/adjust.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/alpha-sort-subs/alpha-sort-subs.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/always-more/always-more.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/clarify-recipient/clarify-recipient.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/code-highlighting/code-highlighting.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/dropdown/dropdown.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/easy-emoticon/easy-emoticon.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/expand-posts/expand-posts.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/fix-codeblocks/fix-codeblocks.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-downvotes/hide-downvotes.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-logo/hide-logo.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-posts/hide-posts.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-reputation/hide-reputation.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-sidebar/hide-sidebar.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-thumbs/hide-thumbs.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hide-upvotes/hide-upvotes.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/hover-indicator/hover-indicator.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/improved-collapsible-comments/improved-collapsible-comments.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/kbin-federation-awareness/kbin-federation-awareness.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/label/label.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/mag-instance-names/mag-instance-names.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/mail/mail.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/mobile-cleanup/mobile-cleanup.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/move-federation-warning/move-federation-warning.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/nav-icons/nav-icons.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/notifications-panel/notifications-panel.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/omni/omni.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/rearrange/rearrange.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/report-bug/report-bug.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/resize-text/resize-text.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/softblock/softblock.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/subs/subs.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/thread-checkmarks/thread-checkmarks.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/thread-delta/thread-delta.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/timestamp/timestamp.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/unblur/unblur.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/user-instance-names/user-instance-names.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alt-all-content-access/alt-all-content-access.user.js
 /* eslint-enable max-len */
-// @resource     kes_layout https://github.com/Pamasich/kbin-kes/raw/tests/helpers/ui.json
-// @resource     kes_json https://github.com/Pamasich/kbin-kes/raw/tests/helpers/manifest.json
-// @resource     kes_css https://github.com/Pamasich/kbin-kes/raw/tests/helpers/kes.css
-// @downloadURL  https://github.com/Pamasich/kbin-kes/raw/tests/kes.user.js
-// @updateURL    https://github.com/Pamasich/kbin-kes/raw/tests/kes.user.js
+// @resource     kes_layout https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/ui.json
+// @resource     kes_json https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/manifest.json
+// @resource     kes_css https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/kes.css
+// @downloadURL  https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/kes.user.js
+// @updateURL    https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/kes.user.js
 // ==/UserScript==
 
 //START AUTO MASTHEAD
@@ -87,9 +87,10 @@
 const version = safeGM("info").script.version;
 const tool = safeGM("info").script.name;
 const repositoryURL = "https://github.com/Pamasich/kbin-kes/";
+const rawURL = "https://raw.githubusercontent.com/pamasich/kbin-kes/";
 const branch = "tests"
 const helpersPath = "helpers/"
-const branchPath = repositoryURL + "raw/" + branch + "/"
+const branchPath = rawURL + branch + "/"
 const versionFile = branchPath + "VERSION";
 const updateURL = branchPath + "kes.user.js";
 const bugURL = repositoryURL + "issues"
