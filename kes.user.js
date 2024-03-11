@@ -34,6 +34,7 @@
 // @require      https://github.com/Pamasich/kbin-kes/raw/testing/helpers/kbin-mod-options.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js
 // @require      http://code.jquery.com/jquery-3.4.1.min.js
+/* eslint-disable max-len */
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/adjust/adjust.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alpha-sort-subs/alpha-sort-subs.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/always-more/always-more.user.js
@@ -72,6 +73,7 @@
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/unblur/unblur.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/user-instance-names/user-instance-names.user.js
 // @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alt-all-content-access/alt-all-content-access.user.js
+/* eslint-enable max-len */
 // @resource     kes_layout https://github.com/Pamasich/kbin-kes/raw/tests/helpers/ui.json
 // @resource     kes_json https://github.com/Pamasich/kbin-kes/raw/tests/helpers/manifest.json
 // @resource     kes_css https://github.com/Pamasich/kbin-kes/raw/tests/helpers/kes.css
