@@ -72,7 +72,7 @@
 // @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/timestamp/timestamp.user.js
 // @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/unblur/unblur.user.js
 // @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/user-instance-names/user-instance-names.user.js
-// @require      https://github.com/Pamasich/kbin-kes/raw/tests/mods/alt-all-content-access/alt-all-content-access.user.js
+// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/mods/alt-all-content-access/alt-all-content-access.user.js
 /* eslint-enable max-len */
 // @resource     kes_layout https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/ui.json
 // @resource     kes_json https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/manifest.json
