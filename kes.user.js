@@ -1209,7 +1209,7 @@ function constructMenu (json, layoutArr, isNew) {
 
         updateCrumbs();
         //necessarily reload the page when verbose timestamps are toggled off
-        //otherwise, triggers a loop of mutations because reverting timeago mutates the watched node
+        //otherwise, triggers a loop of mutations because reverting timeago mutates watched node
         if ((func === "updateTime") && (state === false)) {
             window.location.reload();
         } else {
@@ -1229,7 +1229,7 @@ function constructMenu (json, layoutArr, isNew) {
             console.log(error);
         }
     }
-    function legacyMigration(entry){
+    function legacyMigration (entry) {
         const settings = getSettings();
         const legacyEntrypoints = {
             "mail": "addMail",
@@ -1348,7 +1348,7 @@ function constructMenu (json, layoutArr, isNew) {
                 //reapplies verbose timestamps
                 //see also updateState()
                 if (mutation.target.textContent.indexOf("ago") >= 0) {
-                    applySettings("updateTime");
+                    applySettings("timestamp");
                 }
                 //triggering on the first mutation is sufficient to apply to all timestamps
                 return

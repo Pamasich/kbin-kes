@@ -1,5 +1,4 @@
-
-function hoverIndicator(toggle) {
+function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
     // ==UserScript==
     // @name         Hover Indicator
     // @namespace    https://github.com/aclist
@@ -15,9 +14,9 @@ function hoverIndicator(toggle) {
         safeGM("removeStyle", "kes-hover-css")
     }
 
-    function applyOutlines() {
+    function applyOutlines () {
         const settings = getModSettings('hover');
-        const color = settings.color;
+        const color = getHex(settings.color); // eslint-disable-line no-undef
         const thickness = settings.thickness;
 
         const sels = [

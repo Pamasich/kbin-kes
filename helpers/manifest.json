@@ -135,7 +135,7 @@
     "author": "Pamasich",
     "version": "1.0.1",
     "label": "Alternative access to All Content",
-    "desc": "This addon is useless on mbin.\n\nMakes the magazine title in the navbar link to the All Content view and removes the dedicated button instead.",
+    "desc": "Makes the magazine title in the navbar link to the All Content view and removes the dedicated button instead.\n\nThis addon is useless on mbin.",
     "login": false,
     "recurs": false,
     "entrypoint": "alt_all_content_access",
@@ -411,7 +411,7 @@
     "author": "Pamasich",
     "version": "1.0.1",
     "label": "Repair Lemmy code blocks",
-    "desc": "Lemmy federates special <span> HTML tags on each line of its code blocks which /kbin displays in plaintext, resulting in code blocks being hard to read. This mod removes those tags.",
+    "desc": "Lemmy federates special <span> HTML tags on each line of its code blocks which /kbin displays in plaintext, resulting in code blocks being hard to read. This add-on removes those tags.\n\nThis addon is useless on mbin.",
     "login": false,
     "recurs": true,
     "entrypoint": "fix_codeblocks",
@@ -427,6 +427,17 @@
     "desc": "Convert navigation links on profile pages to dropdown",
     "entrypoint": "dropdown",
     "page": "profile"
+  },
+  {
+    "name": "Fix Pagination Arrows",
+    "author": "Pamasich",
+    "version": "1.0.0",
+    "label": "Fix broken pagination",
+    "desc": "In some cases, like on the All Content view, the pagination is broken. The arrows behave like they're on the first page, regardless of which page the user is on. This addon ensures they work as expected.\n\nThis addon is useless on mbin.",
+    "login": false,
+    "recurs": false,
+    "entrypoint": "fix_pagination_arrows",
+    "page": "general"
   },
   {
     "name": "Unblur NSFW",
@@ -748,7 +759,7 @@
     "label": "Move federation warning to sidebar",
     "login": false,
     "recurs": false,
-    "desc": "When viewing a magazine from another instance, kbin displays a warning at the top of the feed. This mod moves the warning to the sidebar's magazine info panel, or hides it completely.",
+    "desc": "When viewing a magazine/profile from another instance, kbin displays a warning at the top of the feed. This mod moves the warning to the sidebar's info panel, or hides it completely.",
     "entrypoint": "move_federation_warning",
     "namespace": "moveFederationWarning",
     "fields": [
@@ -1207,7 +1218,7 @@
     "author": "shazbot",
     "version": "0.1.0",
     "label": "Softblock magazines",
-    "desc": "Prevent a magazine from appearing on the main subscriptions index, but do not explicitly block its content altogether if visiting the magazine directly. Adds a softblock button next to magazine names on the thread index. Softblocked mags can be managed via the magazine subscriptions index or via a specific magazine's sidebar",
+    "desc": "Prevent a magazine from appearing on the main subscriptions index, but do not explicitly block its content altogether if visiting the magazine directly. Adds a softblock button next to magazine names on the thread index. Softblocked mags can be managed via the magazine subscriptions index or via a specific magazine's sidebar. Disabling this add-on will clear your softblocked magazines",
     "login": false,
     "recurs": true,
     "entrypoint": "softblock",

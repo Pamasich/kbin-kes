@@ -21,7 +21,7 @@ const funcObj = {
 
         }
     }
-    ,
+,
 
     improved_collapsible_comments:
 
@@ -489,11 +489,10 @@ const funcObj = {
         } else if (document.querySelector('.entry-comment.nested') || !document.querySelector('.comments')) {
             return;
         } else {
-            console.log("entering main")
             enterMain();
         }
     }
-    ,
+,
 
     omni:
 
@@ -955,15 +954,21 @@ const funcObj = {
             }
         }
     }
-    ,
+,
 
     clarify_recipient:
 
     function clarifyRecipientInit (toggle) {
         function rewrite (title) {
             const self = document.querySelector('.dropdown .login').getAttribute("href").split('/')[2]
-            const recipient = document.querySelector('.user-inline:not([href="/u/' + self + '"])')
-            const recipientName = recipient.getAttribute('href').split('/')[2]
+            const loc = window.location.href.split('/')[3]
+            let recipientName
+            if (loc === "profile") {
+                const recipient = document.querySelector('.user-inline:not([href="/u/' + self + '"])')
+                recipientName = recipient.href.split('/')[4]
+            } else {
+                recipientName = window.location.href.split('/')[4]
+            }
 
             title.innerText = "Sending message to " + recipientName
         }
@@ -972,7 +977,7 @@ const funcObj = {
         }
 
         const ar = window.location.href.split('/')
-        if ((ar[3] != "profile") || (ar[4] != "messages")) return
+        if ((ar[3] != "profile") && (ar[4] != "messages") && (ar[3] != "u")) return
         const title = document.querySelector('form[name="message"] .required')
         if (!title) return
         if (toggle) {
@@ -981,7 +986,7 @@ const funcObj = {
             reset(title);
         }
     }
-    ,
+,
 
     label:
 
@@ -1008,7 +1013,7 @@ const funcObj = {
             safeGM("removeStyle", "labelop-css")
         }
     }
-    ,
+,
 
     hide_reputation:
 
@@ -1030,11 +1035,11 @@ const funcObj = {
             document.styleSheets[0].addRule('.user-popover ul li:nth-of-type(2)','display:initial')
         }
     }
-    ,
+,
 
     notifications_panel:
 
-    function notificationsPanel (toggle) {
+    function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
         const spinnerCSS = `
         @keyframes spinner {
             0% {
@@ -1489,7 +1494,7 @@ const funcObj = {
             shutdown();
         }
     }
-    ,
+,
 
     mag_instance_names:
 
@@ -1531,134 +1536,157 @@ const funcObj = {
             hideCommunityInstances();
         }
     }
-    ,
+,
 
     alt_all_content_access:
 
     /**
      * This mod aims to make clicking the magazine name in the navbar lead to the All Content
      * view instead of the Threads view, while removing the All Content button itself.
+     * 
+     * @param {Boolean} isActive Whether the mod has been turned on
     */
     function altAllContentAccess (isActive) {  // eslint-disable-line no-unused-vars
-        class AlternativeAllContentAccessMod {
-        /** @returns {HTMLElement[]} */
-            getTitle () {
-                return Array.from(document.querySelectorAll("div.head-title a"));
-            }
+        const titleList = getTitle();
+        const buttons = getAllContentButton();
 
-            /** @returns {boolean} */
-            getHideButtonSetting () {
-                return getModSettings("alt-all-content-access")["hideAllContentButton"];
-            }
+        if (titleList.length == 0) return;
+        if (buttons.length == 0) return;
+        if (isActive) {
+            setup();
+        } else {
+            teardown();
+        }
 
-            /** @returns {HTMLElement[]} */
-            getAllContentButton () {
-                const threadsAttributePattern = "[href^='/*']";
-                const collectionsAttributePattern = "[href$='/*']";
-                const allContentQuery = "menu.head-nav__menu > li > a";
-                const allContentMobileQuery = "div.mobile-nav menu.info a";
-                return Array.from(
-                    document.querySelectorAll(`
+        function setup () {
+            const currentViewIsCollection = isCurrentViewCollection();
+            titleList.forEach((title) => {
+                const href = title.getAttribute("href");
+                if (!currentViewIsCollection && !href.startsWith("/*/")) {
+                    title.setAttribute("href", `/*${href}`);
+                } else if (currentViewIsCollection && !href.endsWith("/*")) {
+                    title.setAttribute("href", `${href}/*`);
+                }
+            });
+            setButtonVisibility(true);
+        }
+
+        function teardown () {
+            titleList.forEach((title) => {
+                const href = title.getAttribute("href");
+                if (href.startsWith("/*/")) title.setAttribute("href", href.slice(2));
+                else if (href.endsWith("/*")) title.setAttribute("href", href.slice(0, href.length-2));
+            });
+            setButtonVisibility(false);
+        }
+
+        /**
+         * Checks whether the existing All Content button should be hidden.
+         * 
+         * @returns {Boolean}
+         */
+        function doHideButton () {
+            return getModSettings("alt-all-content-access")["hideAllContentButton"];
+        }
+
+        /**
+         * Retrieves both the regular and the mobile button.
+         * @returns {HTMLElement[]}
+         */
+        function getAllContentButton () {
+            const threadsAttributePattern = "[href^='/*']";
+            const collectionsAttributePattern = "[href$='/*']";
+            const allContentQuery = "menu.head-nav__menu > li > a";
+            const allContentMobileQuery = "div.mobile-nav menu.info a";
+            return Array.from(
+                document.querySelectorAll(`
                     ${allContentQuery}${threadsAttributePattern}, 
                     ${allContentMobileQuery}${threadsAttributePattern},
                     ${allContentQuery}${collectionsAttributePattern}, 
                     ${allContentMobileQuery}${collectionsAttributePattern}
                 `)
-                );
-            }
-
-            /** @param {boolean} isActive */
-            setButtonVisibility (isActive) {
-                const hideButton = this.getHideButtonSetting() && isActive;
-                this.getAllContentButton().forEach((button) => {
-                    button.parentNode.style.display = (hideButton) ? "none" : "";
-                });
-            }
-
-            isCurrentViewCollection () {
-                return this.getAllContentButton()[0].getAttribute("href").endsWith("/*");
-            }
-
-            setup () {
-                const titleList = this.getTitle();
-                if (titleList.length == 0) return;
-                const currentViewIsCollection = this.isCurrentViewCollection();
-                titleList.forEach((title) => {
-                    const href = title.getAttribute("href");
-                    if (!currentViewIsCollection && !href.startsWith("/*/")) {
-                        title.setAttribute("href", `/*${href}`);
-                    } else if (currentViewIsCollection && !href.endsWith("/*")) {
-                        title.setAttribute("href", `${href}/*`);
-                    }
-                });
-                this.setButtonVisibility(true);
-            }
-
-            teardown () {
-                const titleList = this.getTitle();
-                if (titleList.length == 0) return;
-                titleList.forEach((title) => {
-                    const href = title.getAttribute("href");
-                    if (href.startsWith("/*/")) title.setAttribute("href", href.slice(2));
-                    else if (href.endsWith("/*")) title.setAttribute("href", href.slice(0, href.length-2));
-                });
-                this.setButtonVisibility(false);
-            }
+            );
         }
 
-        if (isActive) {
-            new AlternativeAllContentAccessMod().setup();
-        } else {
-            new AlternativeAllContentAccessMod().teardown();
+        /**
+         * Retrieves the clickable magazine name title, both the regular one and the mobile one..
+         * @returns {HTMLElement[]}
+         */
+        function getTitle () {
+            return Array.from(document.querySelectorAll("div.head-title a"));
+        }
+
+        /**
+         * Makes the buttons appear or disappear depending on the setting in KES and whether the mod
+         * is turned on or off.
+         */
+        function setButtonVisibility () {
+            buttons.forEach((button) => {
+                /** @type {HTMLElement} */
+                const parent = button.parentNode;
+                if (doHideButton() && isActive) parent.style.display = "none";
+                else parent.style.removeProperty("display");
+            });
+        }
+
+        /**
+         * The All Content URL of collections works differently.
+         * @returns {Boolean}
+         */
+        function  isCurrentViewCollection () {
+            return buttons[0].getAttribute("href").endsWith("/*");
         }
     }
-    ,
+,
 
     code_highlighting:
 
     function initCodeHighlights (toggle) {
-        let kchInjectedCss;
+        /* global hljs */
         let kchCssUrl;
-        let kchLastToggleState = false;
         safeGM("addStyle",`
-        .collapsed {
+        .kch-collapsed {
             display: none !important;
         }
+        .hljs .kch_header {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom-style: dashed;'
+        }
+        .hljs-keyword {
+            margin-left: 20px;
+        }
+
         `);
-        function kchStartup (firstBoot = false) {
-            if (firstBoot) {
-                addHeaders('code');
-            } else {
-                addHeaders('code');
-            }
+        function kchStartup () {
+            addHeaders('pre code');
             setCss(kchCssUrl);
         }
         function kchShutdown () {
-            if (kchInjectedCss) {
-                kchInjectedCss.remove();
-            }
+            safeGM("removeStyle", "kch-hljs")
             $('.kch_header').remove();
         }
         function addTags (item) {
+            const orig_code = item.textContent;
+            let lang;
+
             if (item.previousSibling) {
                 if (item.previousSibling.className === "hljs kch_header") return
             }
-            const orig_code = item.textContent;
-            let lang;
             for (let name of item.className.split(' ')) {
                 if (name.includes('-')) {
                     lang = name.split('-')[1];
                     break;
                 }
             }
-            const parent_html = item.parentElement.innerHTML;
+            //const parent_html = item.parentElement.innerHTML;
             const header = document.createElement('div');
             header.className = 'hljs kch_header';
-            header.setAttribute('style', 'padding-top: 10px; padding-bottom: 10px; border-bottom-style: dashed;');
+
             const span = document.createElement('span');
-            span.setAttribute('class', 'hljs-keyword');
-            span.setAttribute('style', 'margin-left: 20px;');
+            span.className = 'hljs-keyword'
             span.innerHTML = lang;
+
             const icon = document.createElement('i');
             icon.className = 'fa-solid fa-copy hljs-section';
             icon.setAttribute('aria-hidden', 'true');
@@ -1681,23 +1709,16 @@ const funcObj = {
             hide_icon.addEventListener('click', function () {
                 hide_icon.classList.toggle('fa-chevron-up');
                 hide_icon.classList.toggle('fa-chevron-down');
-                item.classList.toggle('collapsed');
+                item.classList.toggle('kch-collapsed');
             });
+
             header.appendChild(span);
             header.appendChild(icon);
             let tooltip = header.appendChild(span_copied);
             header.appendChild(hide_icon);
             item.parentElement.prepend(header);
         }
-        function addPreTag (parent, placement, code) {
-            // For some reason, sometimes code isn't wrapped in pre. Let's fix that.
-            const pre = document.createElement('pre');
-            parent.replaceChild(pre, code);
-            pre.appendChild(code);
-            hljs.highlightElement(code);
-        }
         function setCss (url) {
-            // Downloads css files and sets them on page.
             safeGM("xmlhttpRequest",{
                 method: "GET",
                 url: url,
@@ -1705,43 +1726,41 @@ const funcObj = {
                     "Content-Type": "text/css"
                 },
                 onload: function (response) {
-                    injectedCss = safeGM("addStyle",response.responseText);
+                    safeGM("addStyle", response.responseText, "kch-hljs");
                 }
             });
         }
         function addHeaders (selector) {
-            document.querySelectorAll('code').forEach((item) => {
-                const parent = item.parentElement;
-                if (parent.nodeName !== 'PRE') {
-                    const placement = item.nextSibling;
-                    addPreTag(parent, placement, item);
-                }
+            //TODO: if item style is none, skip
+            //el.style.display === "none"
+            document.querySelectorAll(selector).forEach((item) => {
                 if (!(item.classList.contains('hljs'))) {
                     hljs.highlightElement(item);
                 }
+                if (item.style.display === "none") return
                 addTags(item);
             });
         }
         if (toggle) {
             const settings = getModSettings("codehighlights");
-            let myStyle = settings["style"];
-            kchCssUrl = `https://github.com/highlightjs/highlight.js/raw/main/src/styles/base16/${myStyle}.css`
-            if (kchLastToggleState === false) {
-                kchLastToggleState = true;
-                kchStartup(true);
-            } else {
-                kchStartup();
-            }
-            // Configure HLJS and enable.
-            hljs.configure({
-                ignoreUnescapedHTML: true
-            });
+            const myStyle = settings["style"];
+            const prefix = "https://raw.githubusercontent.com"
+            const suffix = "highlightjs/highlight.js/main/src/styles/base16"
+            kchCssUrl = `${prefix}/${suffix}/${myStyle}.css`
+            //        if () {
+            //            kchLastToggleState = true;
+            //            kchStartup(true);
+            //        } else {
+            //            kchStartup();
+            //        }
+            kchStartup();
+            hljs.configure({ ignoreUnescapedHTML: true });
             hljs.highlightAll();
         } else {
             kchShutdown();
         }
     }
-    ,
+,
 
     rearrange:
 
@@ -1770,52 +1789,101 @@ const funcObj = {
             content.style.display = 'unset';
         }
     }
-    ,
+,
 
     fix_codeblocks:
 
-    function fixLemmyCodeblocks (toggle) {
-        const stylePattern = "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};";
-
-        const testPattern = new RegExp(`^\\n?<span style="${stylePattern}">(.+\\n)+<\\/span>\\n?$`);
-        const startTagPattern = new RegExp(`^\\n?<span style="${stylePattern}">`);
-        const endTagPattern = new RegExp(`\\n<\\/span>\\n?$`);
-        const combinedPattern = new RegExp(`<\\/span><span style="${stylePattern}">`, "g");
-
-        const fixedCodeAttribute = "data-fixed-code"
-
-        /** @param {HTMLElement} codeblock */
-        function fixCodeblock (codeblock) {
-            if (!testPattern.test(codeblock.innerText)) return;
-            if (codeblock.nextElementSibling?.hasAttribute(fixedCodeAttribute)) return;
-
-            const fixedBlock = document.createElement("code");
-            fixedBlock.setAttribute(fixedCodeAttribute, "");
-            codeblock.parentNode.insertBefore(fixedBlock, codeblock.nextSibling);
-
-            fixedBlock.innerText = codeblock.innerText
-                .replace(startTagPattern, "")
-                .replaceAll(combinedPattern, "")
-                .replace(endTagPattern, "");
-
-            codeblock.style.display = "none";
-        }
-
-        /** @param {HTMLElement} fixedBlock */
-        function revertCodeblock (fixedBlock) {
-            /** @type {HTMLElement} */
-            const originalBlock = fixedBlock.previousElementSibling;
-            originalBlock.style.removeProperty("display");
-            fixedBlock.parentNode.removeChild(fixedBlock);
-        }
-
-        if (toggle) {
-            document.querySelectorAll("pre code").forEach(fixCodeblock);
+    /**
+     * Lemmy federates its code blocks with syntax highlighting, but /kbin doesn't currently 
+     * correctly handle that. It just displays the additional <span> tags for the syntax
+     * highlighting in plain text. This makes the code very hard to read.
+     * This mod fixes the issue by removing those erroneous tags.
+     * 
+     * @param {Boolean} isActive Whether the mod has been turned on
+     */
+    function fixLemmyCodeblocks (isActive) { // eslint-disable-line no-unused-vars
+        /** @type {String} */
+        const STYLEPATTERN = "((font-style:italic|font-weight:bold);)?color:#[0-9a-fA-F]{6};";
+    
+        if (isActive) {
+            setup();
         } else {
-            document.querySelectorAll(`pre code[${fixedCodeAttribute}]`).forEach(revertCodeblock);
+            teardown();
+        }
+
+        function setup () {
+            getCodeBlocks()
+                .filter((code) => isErroneousCode(code))
+                .filter((code) => !isFixed(code))
+                .forEach((code) => fix(code));
+        }
+
+        function teardown () {
+            getCodeBlocks(true).forEach((code) => {
+                /** @type {HTMLElement} */
+                code.nextElementSibling.remove();
+                code.style.removeProperty("display");
+                markAsUnfixed(code);
+            });
+        }
+
+        /**
+         * Repairs a given code block.
+         * @param {HTMLElement} original The code block that needs to be fixed
+         */
+        function fix (original) {
+            const fixed = document.createElement("code");
+            original.after(fixed);
+
+            const start = new RegExp(`^\\n?<span style="${STYLEPATTERN}">`);
+            const end = new RegExp(`\\n<\\/span>\\n?$`);
+            const combined = new RegExp(`<\\/span><span style="${STYLEPATTERN}">`, "g");
+
+            fixed.textContent = original.textContent
+                .replace(start, "")
+                .replaceAll(combined, "")
+                .replace(end, "");
+
+            original.style.display = "none";
+            markAsFixed(original);
+        }
+
+        /**
+         * Checks whether a given code block needs to be fixed.
+         * @param {HTMLElement} code
+         * @returns {Boolean}
+         */
+        function isErroneousCode (code) {
+            const pattern = new RegExp(`^\\n?<span style="${STYLEPATTERN}">(.+\\n)+<\\/span>\\n?$`);
+            return pattern.test(code.textContent);
+        }
+
+        /**
+         * @param {Boolean} fixedCodeOnly Whether to only return those code blocks that have been fixed 
+         * (optional)
+         * @returns {HTMLElement[]} A list of all the code blocks on the page
+         */
+        function getCodeBlocks (fixedCodeOnly = false) {
+            const allBlocks = Array.from(document.querySelectorAll("pre code"));
+            return fixedCodeOnly
+                ? allBlocks.filter((block) => isFixed(block))
+                : allBlocks;
+        }
+
+        /** @param {HTMLElement} elem @returns {Boolean} */
+        function isFixed (elem) {
+            return elem.dataset.fixed;
+        } 
+        /** @param {HTMLElement} */
+        function markAsFixed (elem) {
+            elem.dataset.fixed = true;
+        }
+        /** @param {HTMLElement} */
+        function markAsUnfixed (elem) {
+            delete elem.dataset.fixed;
         }
     }
-    ,
+,
 
     dropdown:
 
@@ -1886,11 +1954,145 @@ const funcObj = {
             }
         }
     }
-    ,
+,
+
+    fix_pagination_arrows:
+
+    /**
+     * This mod aims to fix a current kbin issue.
+     * On some views, like All Content, the pagination is broken. The arrows behave like they're on
+     * the first page, regardless of which they're actually on. This mod is meant to fix the issue
+     * by manually rewriting the arrows to work correctly.
+     * 
+     * @param {Boolean} isActive Whether the mod has been turned on
+     */
+    function fixPaginationArrows (isActive) { // eslint-disable-line no-unused-vars
+        /** @type {HTMLElement} */
+        const leftArrow = document.querySelector(`span.pagination__item--previous-page`);
+        /** @type {HTMLElement} */
+        const rightArrow = document.querySelector("a.pagination__item--next-page");
+        /** @type {Number} */
+        const currentPage = Number(window.location.search?.slice(3)) ?? 1;
+
+        // everything is correct for the first page, so no need to change anything there
+        if (currentPage > 1) {
+            if (isActive) {
+                setup();
+            } else {
+                teardown();
+            }
+        }
+
+        function setup () {
+            // The left arrow query specifically looks for an uninteractable one. If it is found
+            // past page 1, that means it needs to be fixed. There's no other conditions needed.
+            if (leftArrow && !isFixed(leftArrow)) {
+                leftArrow.style.display = "none";
+                leftArrow.before(createClickable(leftArrow, currentPage-1, "prev"));
+                markAsFixed(leftArrow);
+            }
+            if (rightArrow && !isFixed(rightArrow) && isNextPageWrong()) {
+                if (isThisLastPage()) {
+                    disable(rightArrow);
+                } else {
+                    rightArrow.setAttribute("href", buildUrl(currentPage+1));
+                }
+                markAsFixed(rightArrow);
+            }
+        }
+
+        function teardown () {
+            if (leftArrow && isFixed(leftArrow)) {
+                document.querySelector("a.pagination__item--previous-page").remove();
+                leftArrow.style.removeProperty("display");
+                markAsUnfixed(leftArrow);
+            }
+            if (rightArrow && isFixed(rightArrow)) {
+                if (rightArrow.classList.contains("pagination__item--disabled")) {
+                    rightArrow.classList.remove("pagination__item--disabled");
+                    rightArrow.style.removeProperty("color");
+                    rightArrow.style.removeProperty("font-weight");
+                }
+                rightArrow.setAttribute("href", buildUrl(2));
+                markAsUnfixed(rightArrow);
+            }
+        }
+
+        /**
+         * Disables an arrow, making it non-clickable.
+         * @param {HTMLElement} elem
+         */
+        function disable (elem) {
+            elem.style.color = "var(--kbin-meta-text-color)";
+            elem.style.fontWeight = "400";
+            elem.classList.add("pagination__item--disabled");
+            elem.removeAttribute("href");
+        }
+
+        /**
+         * The left arrow remains uninteractable when this bug happens, regardless of page. This
+         * function creates a clickable element to replace it with.
+         * @param {HTMLElement} original
+         * @param {Number} page What page the new interactable arrow should point to
+         * @param {String} role The value for the rel attribute
+         * @returns {HTMLElement}
+         */
+        function createClickable (original, page, role) {
+            const newElement = document.createElement("a");
+            newElement.classList = original.classList;
+            newElement.classList.remove("pagination__item--disabled");
+            newElement.textContent = original.textContent;
+            newElement.setAttribute("href", buildUrl(page));
+            newElement.setAttribute("rel", role);
+            return newElement;
+        }
+
+        /**
+         * Checks whether the current page is the last one.
+         * @returns {Boolean}
+         */
+        function isThisLastPage () {
+            const lastPage = rightArrow.previousElementSibling.textContent;
+            return lastPage == currentPage;
+        }
+
+        /**
+         * Checks if the right arrow points to the correct page. Or rather, the wrong one.
+         * @returns {Boolean}
+         */
+        function isNextPageWrong () {
+            const actualUrl = rightArrow.getAttribute("href");
+            const expectedUrl = buildUrl(currentPage+1);
+            return actualUrl != expectedUrl;
+        }
+
+        /**
+         * Constructs the correct full URL for one of the arrows.
+         * @param {Number} page
+         * @returns {String}
+         */
+        function buildUrl (page) {
+            return `${window.location.pathname}?p=${page}`;
+        }
+
+        /** @param {HTMLElement} elem @returns {Boolean} */
+        function isFixed (elem) {
+            return elem.dataset.fixed;
+        } 
+        /** @param {HTMLElement} */
+        function markAsFixed (elem) {
+            elem.dataset.fixed = true;
+        }
+        /** @param {HTMLElement} */
+        function markAsUnfixed (elem) {
+            delete elem.dataset.fixed;
+        }
+    }
+,
 
     unblur:
 
-    function unblurInit (toggle) {
+    function unblurInit (toggle) { // eslint-disable-line no-unused-vars
 
         const unblurCSS = `
         .thumb-subject, .image-filler {
@@ -1905,7 +2107,7 @@ const funcObj = {
             safeGM("removeStyle", 'unblurred');
         }
     }
-    ,
+,
 
     easy_emoticon:
 
@@ -2143,7 +2345,7 @@ const funcObj = {
             document.removeEventListener('input', eventListener);
         }
     }
-    ,
+,
 
     nav_icons:
 
@@ -2170,7 +2372,7 @@ const funcObj = {
             document.styleSheets[0].addRule('header menu li a[aria-label="Select a channel"] i::before', 'content:"\\f03a" ; font-family: "Font Awesome 6 Free"; font-weight: initial;');
         }
     }
-    ,
+,
 
     resize_text:
 
@@ -2234,7 +2436,8 @@ const funcObj = {
 
             // === HEADER === //
             //header *variables*
-            const topHeader = document.querySelectorAll('#header.header'); // selects elem w id header and class header
+            // selects elem w id header and class header
+            const topHeader = document.querySelectorAll('#header.header');
             const avatar = document.querySelector('img.user-avatar');
 
 
@@ -2669,7 +2872,7 @@ const funcObj = {
             return
         }
     }
-    ,
+,
 
     hide_logo:
 
@@ -2725,11 +2928,11 @@ const funcObj = {
             restoreLogo();
         }
     }
-    ,
+,
 
     timestamp:
 
-    function updateTime (toggle) {
+    function updateTime (toggle) { // eslint-disable-line no-unused-vars
         const ns = 'timestamp'
         let times = document.querySelectorAll('.timeago')
         const settings = getModSettings(ns);
@@ -2764,7 +2967,7 @@ const funcObj = {
             return
         }
     }
-    ,
+,
 
     report_bug:
 
@@ -2797,7 +3000,7 @@ const funcObj = {
             $('.kes-report-bug').hide();
         }
     }
-    ,
+,
 
     mail:
 
@@ -2827,6 +3030,7 @@ const funcObj = {
             items.forEach((item) => {
                 const username = getUsername(item);
                 if (!username) return;
+                if (username === self_username) return;
                 const sib = item.nextSibling
                 let link
                 try {
@@ -2854,6 +3058,9 @@ const funcObj = {
             });
         }
 
+        const login = document.querySelector('.login');
+        if (!login) return;
+        const self_username = login.href.split('/')[4];
         const settings = getModSettings("mail");
         const pref = settings["prefix"]
         if (toggle) {
@@ -2864,7 +3071,7 @@ const funcObj = {
             $('.kes-mail-link').remove();
         }
     }
-    ,
+,
 
     move_federation_warning:
 
@@ -2885,25 +3092,29 @@ const funcObj = {
         // @license      MIT
         // ==/UserScript==
 
-        if (window.location.href.split('/')[3] !== "m") {
-            return; // only run on magazine pages
-        }
+        const loc = window.location.href.split('/')
+        // only run on magazine/profile pages
+        if ((loc[3] !== "m") && (loc[3] !== "u")) return;
 
         let settings = getModSettings("moveFederationWarning");
-    
         let alertBox = $(".alert.alert__info");
         let insertAfterQuery = "";
 
         if(toggle) {
-            insertAfterQuery = "#sidebar .magazine .magazine__subscribe";
+            if (loc[3] === "m") {
+                insertAfterQuery = "#sidebar .magazine .magazine__subscribe";
+            } else {
+                insertAfterQuery = "#sidebar .section.user-info";
+            }
 
             if(settings["action"] === "Hide completely") {
                 alertBox.hide();
             } else {
                 alertBox.show();
             }
-        } else {   
-            insertAfterQuery = "#main #options";
+        } else {
+            const options = document.querySelectorAll('#main #options')
+            insertAfterQuery = options[options.length-1]
             alertBox.show();
         }
 
@@ -2913,7 +3124,7 @@ const funcObj = {
             insertAfter.after(alertBox);
         }
     }
-    ,
+,
 
     hide_thumbs:
 
@@ -2931,12 +3142,12 @@ const funcObj = {
             display:none
         }
         `
-        function apply (sheet, name) {
-            unset(name)
-            safeGM("addStyle", sheet, name)
+        function apply(sheet, name){
+                unset(name)
+                safeGM("addStyle", sheet, name)
         }
-        function unset (name) {
-            safeGM("removeStyle", name)
+        function unset(name){
+                safeGM("removeStyle", name)
         }
         if (toggle) {
             if (settings["index"]) {
@@ -2954,11 +3165,11 @@ const funcObj = {
             unset(inline)
         }
     }
-    ,
+,
 
     adjust:
 
-    function adjustSite (toggle) {
+    function adjustSite (toggle) { // eslint-disable-line no-unused-vars
         // ==UserScript==
         // @name         Color adjustments
         // @namespace    https://github.com/aclist
@@ -2977,16 +3188,15 @@ const funcObj = {
         }
 
         function adjustColors (sheetName) {
-            safeGM("removeStyle", sheetName)
             let settings = getModSettings('adjust');
             let sepia = `${settings.sepia * 10}%`;
             let hue = `${settings.hueRotate * 10}deg`;
             let bright = `${(settings.bright * 10) + 100}%`;
             let saturate = `${(settings.saturate * 10) + 100}%`;
             let contrast = `${(settings.contrast * 10) + 100}%`;
-            let upvoteCol = getHex(settings.upvote);
-            let downvoteCol = getHex(settings.downvote);
-            let boostCol = getHex(settings.boost);
+            let upvoteCol = getHex(settings.upvote); // eslint-disable-line no-undef
+            let downvoteCol = getHex(settings.downvote); // eslint-disable-line no-undef
+            let boostCol = getHex(settings.boost); // eslint-disable-line no-undef
 
 
             const customCSS = `
@@ -3006,10 +3216,11 @@ const funcObj = {
                     text-decoration: none;
                 }
             `;
+            safeGM("removeStyle", sheetName);
             safeGM("addStyle", customCSS, sheetName)
         }
     }
-    ,
+,
 
     alpha_sort_subs:
 
@@ -3054,7 +3265,7 @@ const funcObj = {
             $(ul).show();
         }
     }
-    ,
+,
 
     expand_posts:
 
@@ -3093,7 +3304,7 @@ const funcObj = {
             button.className = 'kes-expand-post-button'
             button.style.cursor = 'pointer'
             button.addEventListener('click', (e) => {
-                const mode = e.target.innerText
+            const mode = e.target.innerText
                 const settings = getModSettings("expand-posts")
                 const loadingLabel = settings.loading
                 const expandLabel = settings.expand
@@ -3169,14 +3380,14 @@ const funcObj = {
             });
         }
     }
-    ,
+,
 
     thread_delta:
 
-    function threadDeltaInit (toggle) {
+    function threadDeltaInit (toggle) { // eslint-disable-line no-unused-vars
         const settings = getModSettings('thread-delta');
-        const fgcolor = getHex(settings["fgcolor"])
-        const bgcolor = getHex(settings["bgcolor"])
+        const fgcolor = getHex(settings["fgcolor"]) // eslint-disable-line no-undef
+        const bgcolor = getHex(settings["bgcolor"]) // eslint-disable-line no-undef
         const state = settings["state"]
 
         const hostname = window.location.hostname;
@@ -3219,7 +3430,6 @@ const funcObj = {
             else {
                 countBar.style.display = ""
             }
-        
             countBar.innerText = `Magazine: ${mag} | Threads: (${thread_count})`
             if (counts[0]) {
                 thread_delta = (thread_count - counts[0])
@@ -3253,6 +3463,7 @@ const funcObj = {
         }
 
         async function saveCounts (hostname, mag, counts) {
+            // eslint-disable-next-line no-unused-vars
             const savedCounts = await safeGM("setValue", `thread-deltas-${hostname}-${mag}`, counts)
         }
 
@@ -3267,7 +3478,7 @@ const funcObj = {
             saveCounts(hostname, mag, e)
         }
     }
-    ,
+,
 
     hide_upvotes:
 
@@ -3287,7 +3498,7 @@ const funcObj = {
             $('form.vote__up').show();
         }
     }
-    ,
+,
 
     hide_sidebar:
 
@@ -3323,12 +3534,11 @@ const funcObj = {
             }
         }
     }
-    ,
+,
 
     hover_indicator:
 
-
-    function hoverIndicator (toggle) {
+    function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
         // ==UserScript==
         // @name         Hover Indicator
         // @namespace    https://github.com/aclist
@@ -3346,7 +3556,7 @@ const funcObj = {
 
         function applyOutlines () {
             const settings = getModSettings('hover');
-            const color = settings.color;
+            const color = getHex(settings.color); // eslint-disable-line no-undef
             const thickness = settings.thickness;
 
             const sels = [
@@ -3398,11 +3608,11 @@ const funcObj = {
             safeGM("addStyle", exclusions, "kes-hover-exclusions")
         }
     }
-    ,
+,
 
     thread_checkmarks:
 
-    function checksInit (toggle, mutation) {
+    function checksInit (toggle, mutation) { // eslint-disable-line no-unused-vars
         const settings = getModSettings('checks');
         const checkColor = settings["check-color"]
         const threadIndex = document.querySelector('[data-controller="subject-list"]')
@@ -3418,22 +3628,22 @@ const funcObj = {
             setChecks(loaded)
         }
         function addCheck (subs, item) {
-            if (item.children.length === 0) {
-                const mag = item.getAttribute('href').split('/')[2]
-                if (subs.includes(mag)) {
-                    const ch = document.createElement('span')
-                    ch.style.color = getHex(checkColor);
-                    ch.id = 'kes-omni-check'
-                    ch.innerText = " ✓"
-                    item.appendChild(ch)
-                }
+            if (item.querySelector('#kes-omni-check')) return
+            const mag = item.getAttribute('href').split('/')[2]
+            if (subs.includes(mag)) {
+                const ch = document.createElement('span')
+                ch.style.color = getHex(checkColor); // eslint-disable-line no-undef
+                ch.id = 'kes-omni-check'
+                ch.innerText = " ✓"
+                //FIXME: append adjacent; collision with mag instance mod
+                item.appendChild(ch)
             }
         }
         function setChecks (subs) {
             const exists = document.querySelector('#kes-omni-check')
             if (exists) {
                 document.querySelectorAll('#kes-omni-check').forEach((item) => {
-                    item.style.color = getHex(checkColor);
+                    item.style.color = getHex(checkColor); // eslint-disable-line no-undef
                 });
             }
             document.querySelectorAll('.magazine-inline').forEach((item) => {
@@ -3450,11 +3660,11 @@ const funcObj = {
             });
         }
     }
-    ,
+,
 
     user_instance_names:
 
-    function userInstanceEntry (toggle) {
+    function userInstanceEntry (toggle) { // eslint-disable-line no-unused-vars
         function showUserInstances () {
             $('.user-inline').each(function () {
                 if (!$(this).hasClass('instance')) {
@@ -3464,7 +3674,10 @@ const funcObj = {
                     // Check if user's link includes an @
                     if (userInstance) {
                         // Add instance name to user's name
-                        $(this).html($(this).html() + '<span class="user-instance">@' + userInstance + '</span>');
+                        $(this).html($(this).html() +
+                            '<span class="user-instance">@' +
+                            userInstance +
+                            '</span>');
                     }
                 }
             });
@@ -3475,14 +3688,13 @@ const funcObj = {
                 $(this).html($(this).html().split('<span class="user-instance">@')[0]);
             });
         }
-        const localInstance = window.location.href.split('/')[2];
         if (toggle) {
             showUserInstances();
         } else {
             hideUserInstances();
         }
     }
-    ,
+,
 
     hide_downvotes:
 
@@ -3502,7 +3714,7 @@ const funcObj = {
             $('form.vote__down').show();
         }
     }
-    ,
+,
 
     kbin_federation_awareness:
 
@@ -3640,15 +3852,15 @@ const funcObj = {
             removeOld(dh, df, dm, mh, mf, mm);
         }
 
-        function findHostname (links) {
-            let host
-            links.forEach((link) => {
-                const innerString = link.innerHTML.trim();
-                if (innerString === "copy original url") {
-                    host = new URL(link.href).hostname;
-                }
-            });
-            return host
+        function findHostname (op) {
+            if (op.includes('@')) {
+                //other instances
+                const arr = op.split('@')
+                return arr[arr.length - 1]
+            } else {
+                //home instance
+                return window.location.hostname
+            }
         }
 
         function kfaInitClasses () {
@@ -3659,8 +3871,10 @@ const funcObj = {
             ];
             document.querySelectorAll('#content article.entry').forEach(function (article) {
                 if (article.querySelector('[class^=data-]')) { return }
-                const copyLinks = article.querySelectorAll('footer menu .dropdown a[data-action="clipboard#copy"]');
-                const hostname = findHostname(copyLinks);
+                let op = article.querySelector('.user-inline').href
+                op = String(op)
+                const hostname = findHostname(op);
+
                 let articleAside = article.querySelector('aside');
                 article.setAttribute('data-hostname', hostname);
                 let articleIndicator = document.createElement('div');
@@ -3722,7 +3936,7 @@ const funcObj = {
         }
     }
 
-    ,
+,
 
     mobile_cleanup:
 
@@ -3772,7 +3986,7 @@ const funcObj = {
             mobileHideTeardown();
         }
     }
-    ,
+,
 
     hide_posts:
 
@@ -3815,9 +4029,9 @@ const funcObj = {
         async function storeCurrentPage (hideThisPage) {
             await safeGM("setValue","hide-this-page",hideThisPage)
         }
-        function hideSib (el, mode) {
+        function hideSib(el, mode){
             const sib = el.nextSibling;
-            if (sib.className === "js-container") {
+            if (sib.className === "js-container"){
                 if (mode === 'hide') {
                     $(sib).hide();
                 } else {
@@ -3869,11 +4083,11 @@ const funcObj = {
             fetchCurrentPage();
         }
     }
-    ,
+,
 
     softblock:
 
-    function softBlockInit (toggle) {
+    function softBlockInit (toggle) { // eslint-disable-line no-unused-vars
         //TODO: don't apply on magazine pages
         const hostname = window.location.hostname;
         const softBlockCSS = `
@@ -3925,11 +4139,16 @@ const funcObj = {
             el.classList.add('softblocked-article');
         }
         function hideThreads (mags) {
+            let el
             const articles = document.querySelectorAll('.magazine-inline')
             articles.forEach((article) => {
                 const instance = article.href.split('/')[4]
                 if (mags.includes(instance)) {
-                    const el = article.parentElement.parentElement;
+                    if (getInstanceType() === "kbin") {
+                        el = article.parentElement.parentElement;
+                    } else {
+                        el = article.parentElement.parentElement.parentElement;
+                    }
                     blankCSS(el);
                 }
             });
@@ -4151,11 +4370,11 @@ const funcObj = {
             saveMags(hostname, e)
         }
     }
-    ,
+,
 
     subs:
 
-    function initMags (toggle) {
+    function initMags (toggle) { // eslint-disable-line no-unused-vars
 
         function createMags () {
             const nav = document.querySelector('.head-nav__menu');
