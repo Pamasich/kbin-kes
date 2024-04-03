@@ -128,7 +128,7 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
         font-size: 1rem;
         position: absolute;
         top: 30%;
-        margin-left: 55px;
+        margin-left: 91.5px;
     }
     `;
 
@@ -157,7 +157,7 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
     `
     const notificationsURL = 'https://' + window.location.hostname + '/settings/notifications'
 
-    function readAndReset (response) {
+    function readAndReset () {
         const counter = document.querySelector('.notification-counter');
         if (counter) {
             counter.remove();
@@ -414,7 +414,6 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
                 msgCount = parseInt(msgCounterElement.querySelector('.badge').innerText);
                 $(msgCounterElement).hide();
             }
-            let notiCount = 0;
             let oldCount = 0;
             if (counterElement) {
                 oldCount = parseInt(counterElement.querySelector('.badge').innerText);
@@ -429,7 +428,7 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
                 notiBadge.innerText = notiPanelCount;
                 anchorOuterElement.appendChild(notiBadgeHolder);
             }
-            anchorOuterElement.addEventListener('click', (e) => {
+            anchorOuterElement.addEventListener('click', () => {
                 safeGM("addStyle",forceDropdownCSS);
                 toggleIframe(listItem)
             });

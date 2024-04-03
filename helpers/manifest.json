@@ -105,6 +105,19 @@
     "page": "profiles"
   },
   {
+    "name": "Magazine CSS Fix — Unsanitize",
+    "namespace": "unsanitize-css",
+    "author": "Pamasich",
+    "version": "1.0.0",
+    "label": "Unsanitize Magazine CSS",
+    "desc": "Kbin supports custom CSS for magazines, but that functionality is limited because kbin wrongly replaces some important CSS characters with HTML escape codes, making the code partially non-functional. This addon fixes the issue by undoing those replacements, making the CSS actually work as expected.\n\nThis mod is unnecessary on mbin.",
+    "login": false,
+    "recurs": false,
+    "entrypoint": "unsanitize_css",
+    "new_since": "4.0",
+    "page": "fixes"
+  },
+  {
     "name": "Notifications panel",
     "author": [
       "blobcat",
@@ -345,6 +358,9 @@
         "label": "Select a theme"
       }
     ],
+    "depends_on": [
+      "fix_codeblocks"
+    ],
     "page": "threads"
   },
   {
@@ -415,7 +431,10 @@
     "login": false,
     "recurs": true,
     "entrypoint": "fix_codeblocks",
-    "page": "general"
+    "depends_off": [
+      "code_highlighting"
+    ],
+    "page": "fixes"
   },
   {
     "name": "Dropdown links",
@@ -437,7 +456,8 @@
     "login": false,
     "recurs": false,
     "entrypoint": "fix_pagination_arrows",
-    "page": "general"
+    "new_since": "4.0",
+    "page": "fixes"
   },
   {
     "name": "Unblur NSFW",
@@ -518,7 +538,6 @@
       "optionHeader",
       "optionPosts",
       "optionComments",
-      "optionMagSidebar",
       "optionHomeSidebar",
       "optionCreate",
       "optionProfile",
@@ -526,8 +545,7 @@
       "optionMessages",
       "optionSortBy",
       "optionNotifs",
-      "optionFooter",
-      "optionActivity"
+      "optionFooter"
     ],
     "fields": [
       {
@@ -538,7 +556,7 @@
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "#header.header",
         "key": "optionHeader",
         "label": "Header:",
         "step": "0.1",
@@ -547,7 +565,7 @@
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "article.entry .content p",
         "key": "optionPosts",
         "label": "Posts:",
         "step": "0.1",
@@ -556,7 +574,7 @@
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": ".entry-comment .content",
         "key": "optionComments",
         "label": "Comments:",
         "step": "0.1",
@@ -565,16 +583,7 @@
       },
       {
         "type": "number",
-        "initial": 14,
-        "key": "optionActivity",
-        "label": "Activity:",
-        "step": "0.1",
-        "min": "5",
-        "max": "50"
-      },
-      {
-        "type": "number",
-        "initial": 14,
+        "initial": "div.page-notifications",
         "key": "optionNotifs",
         "label": "Notifications:",
         "step": "0.1",
@@ -583,16 +592,16 @@
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "div.container form[name=\"user_settings\"",
         "key": "optionUserSettings",
-        "label": "Settings:",
+        "label": "Settings, magazine index:",
         "step": "0.1",
         "min": "5",
         "max": "50"
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "aside#options menu li a, aside#options menu i",
         "key": "optionSortBy",
         "label": "Sort by bar:",
         "step": "0.1",
@@ -601,25 +610,16 @@
       },
       {
         "type": "number",
-        "initial": 14,
-        "key": "optionMagSidebar",
-        "label": "Magazine Sidebar:",
-        "step": "0.1",
-        "min": "5",
-        "max": "50"
-      },
-      {
-        "type": "number",
-        "initial": 13,
+        "initial": "aside#sidebar section.related-magazines",
         "key": "optionHomeSidebar",
-        "label": "Front page Sidebar:",
+        "label": "Sidebars:",
         "step": "0.1",
         "min": "5",
         "max": "50"
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "form.entry-create",
         "key": "optionCreate",
         "label": "Create (threads, mags, links, etc):",
         "step": "0.1",
@@ -628,25 +628,25 @@
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "div.user-box",
         "key": "optionProfile",
-        "label": "Profiles:",
+        "label": "User profiles:",
         "step": "0.1",
         "min": "5",
         "max": "50"
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "div.page-messages",
         "key": "optionMessages",
-        "label": "Messages:",
+        "label": "Inbox messages:",
         "step": "0.1",
         "min": "5",
         "max": "50"
       },
       {
         "type": "number",
-        "initial": 14,
+        "initial": "#footer > .kbin-container > section menu li",
         "key": "optionFooter",
         "label": "Footer:",
         "step": "0.1",
@@ -712,7 +712,7 @@
     "label": "Report bug button on posts",
     "login": false,
     "recurs": true,
-    "desc": "Submit the contents of a post verbatim as a bug report to the KES issue tracker. Button is available from the 'More' menu under comments.",
+    "desc": "Submit the contents of a thread comment verbatim as a bug report to the KES issue tracker. The button is available from the 'More' menu under comments.",
     "entrypoint": "report_bug",
     "page": "debug"
   },
@@ -742,12 +742,6 @@
         "initial": "PM",
         "key": "text",
         "label": "Label text"
-      },
-      {
-        "type": "text",
-        "initial": "submitted by",
-        "key": "prefix",
-        "label": "Poster prefix (use single space for empty)"
       }
     ],
     "page": "general"
@@ -1102,6 +1096,26 @@
     "recurs": true,
     "login": false,
     "page": "general"
+  },
+  {
+    "name": "Add submission prefix",
+    "author": "shazbot",
+    "version": "0.1.0",
+    "label": "Add submission prefix",
+    "desc": "Add submission prefix next to usernames on posts",
+    "login": false,
+    "recurs": true,
+    "namespace": "submission_label",
+    "fields": [
+      {
+        "type": "text",
+        "initial": "submitted by",
+        "key": "prefix",
+        "label": "Poster prefix (use single space for empty)"
+      }
+    ],
+    "page": "threads",
+    "entrypoint": "submission_label"
   },
   {
     "name": "Hide Downvotes",

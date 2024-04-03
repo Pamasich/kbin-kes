@@ -13,7 +13,6 @@
     "optionHeader",
     "optionPosts",
     "optionComments",
-    "optionMagSidebar",
     "optionHomeSidebar",
     "optionCreate",
     "optionProfile",
@@ -21,8 +20,7 @@
     "optionMessages",
     "optionSortBy",
     "optionNotifs",
-    "optionFooter",
-    "optionActivity"
+    "optionFooter"
   ],
   "fields": [
     {
@@ -33,7 +31,7 @@
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "#header.header",
       "key": "optionHeader",
       "label": "Header:",
       "step": "0.1",
@@ -42,7 +40,7 @@
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "article.entry .content p",
       "key": "optionPosts",
       "label": "Posts:",
       "step": "0.1",
@@ -51,7 +49,7 @@
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": ".entry-comment .content",
       "key": "optionComments",
       "label": "Comments:",
       "step": "0.1",
@@ -60,16 +58,7 @@
     },
     {
       "type": "number",
-      "initial": 14,
-      "key": "optionActivity",
-      "label": "Activity:",
-      "step": "0.1",
-      "min": "5",
-      "max": "50"
-    },
-    {
-      "type": "number",
-      "initial": 14,
+      "initial": "div.page-notifications",
       "key": "optionNotifs",
       "label": "Notifications:",
       "step": "0.1",
@@ -78,16 +67,16 @@
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "div.container form[name=\"user_settings\"",
       "key": "optionUserSettings",
-      "label": "Settings:",
+      "label": "Settings, magazine index:",
       "step": "0.1",
       "min": "5",
       "max": "50"
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "aside#options menu li a, aside#options menu i",
       "key": "optionSortBy",
       "label": "Sort by bar:",
       "step": "0.1",
@@ -96,25 +85,16 @@
     },
     {
       "type": "number",
-      "initial": 14,
-      "key": "optionMagSidebar",
-      "label": "Magazine Sidebar:",
-      "step": "0.1",
-      "min": "5",
-      "max": "50"
-    },
-    {
-      "type": "number",
-      "initial": 13,
+      "initial": "aside#sidebar section.related-magazines",
       "key": "optionHomeSidebar",
-      "label": "Front page Sidebar:",
+      "label": "Sidebars:",
       "step": "0.1",
       "min": "5",
       "max": "50"
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "form.entry-create",
       "key": "optionCreate",
       "label": "Create (threads, mags, links, etc):",
       "step": "0.1",
@@ -123,25 +103,25 @@
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "div.user-box",
       "key": "optionProfile",
-      "label": "Profiles:",
+      "label": "User profiles:",
       "step": "0.1",
       "min": "5",
       "max": "50"
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "div.page-messages",
       "key": "optionMessages",
-      "label": "Messages:",
+      "label": "Inbox messages:",
       "step": "0.1",
       "min": "5",
       "max": "50"
     },
     {
       "type": "number",
-      "initial": 14,
+      "initial": "#footer > .kbin-container > section menu li",
       "key": "optionFooter",
       "label": "Footer:",
       "step": "0.1",

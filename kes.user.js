@@ -268,6 +268,20 @@ function constructMenu (json, layoutArr, isNew) {
         let modsHR = " (" + activeMods + "/" + totalMods + ")"
         return modsHR
     }
+    function getComputedFontSize(string){
+        if (typeof string === 'number') return string
+        if (isNaN(parseFloat(string)) === false) {
+            return parseFloat(string)
+        }
+        const el = document.querySelector(string)
+        if (!el) {
+            return null
+        }
+        const fontsize = document.defaultView.getComputedStyle(el).fontSize
+        let px = fontsize.split('px')[0]
+        px = parseFloat(px)
+        return px
+    }
 
     function showSettingsModal () {
         const settings = getSettings();
@@ -563,6 +577,11 @@ function constructMenu (json, layoutArr, isNew) {
                                         let initial = json[it].fields[k].initial
                                         if (json[it].fields[k].type === "color") {
                                             initial = getHex(initial);
+                                        } else if (json[it].fields[k].type === "number") {
+                                            initial = getComputedFontSize(initial)
+                                            if (!initial) {
+                                                initial = 14
+                                            }
                                         }
                                         found.setAttribute("value",initial);
                                         found.value = initial;
@@ -598,11 +617,26 @@ function constructMenu (json, layoutArr, isNew) {
                     case "number": {
                         const numberField = document.createElement('input');
                         numberField.setAttribute("type", fieldType);
+
+                        let val
+                        let size
                         if (modSettings[key] === undefined) {
-                            numberField.setAttribute("value", initial);
+                            size = getComputedFontSize(initial)
+                            if (!size) {
+                                val = 14
+                            } else {
+                                val = size
+                            }
                         } else {
-                            numberField.setAttribute("value", modSettings[key])
+                            size = getComputedFontSize(modSettings[key])
+                            if (!size) {
+                                val = 14
+                            } else {
+                                val = size
+                            }
                         }
+                        numberField.setAttribute("value", val)
+
                         numberField.setAttribute("kes-iter", it);
                         numberField.setAttribute("kes-key", key);
                         numberField.setAttribute('min', json[it].fields[i].min);
@@ -1090,6 +1124,7 @@ function constructMenu (json, layoutArr, isNew) {
         bodyHolder.appendChild(kesUl);
         document.body.appendChild(modal);
         document.querySelector('.kes-settings-modal-sidebar ul').addEventListener("click", (e) => {
+            if (e.target.className != "kes-tab-link") return
             openTab(e.target.outerText);
         });
         document.querySelector('.kes-list').addEventListener("click", (e) => {
@@ -1210,19 +1245,49 @@ function constructMenu (json, layoutArr, isNew) {
         updateCrumbs();
         //necessarily reload the page when verbose timestamps are toggled off
         //otherwise, triggers a loop of mutations because reverting timeago mutates watched node
-        if ((func === "updateTime") && (state === false)) {
+        if ((func === "timestamp") && (state === false)) {
             window.location.reload();
         } else {
             toggleSettings(func);
         }
     }
 
+    function toggleDependencies (entry, state) {
+        let object
+        let depends
+        let entrypoint
+
+        for (let i = 0; i < json.length; ++i) {
+            if(json[i].entrypoint === entry) {
+                object = json[i]
+            }
+        }
+        if (!object.depends_on && !object.depends_off) return
+        if (state == true && !object.depends_on) return
+        if (state == false && !object.depends_off) return
+
+        if (state === true) {
+            depends = object.depends_on
+        } else {
+            depends = object.depends_off
+        }
+
+        const settings = getSettings();
+        for (let i = 0; i < depends.length; ++i) {
+            entrypoint = depends[i]
+            settings[entrypoint] = state
+            saveSettings(settings);
+            funcObj[entrypoint](state);
+        }
+    }
     function toggleSettings (entry) {
         const settings = getSettings()
         try {
             if (settings[entry] == true) {
+                toggleDependencies(entry, true)
                 funcObj[entry](true);
             } else {
+                toggleDependencies(entry, false)
                 funcObj[entry](false);
             }
         } catch (error) {
@@ -1288,6 +1353,7 @@ function constructMenu (json, layoutArr, isNew) {
         const settings = getSettings();
         try {
             if (settings[entry] == true) {
+                toggleDependencies(entry, true)
                 funcObj[entry](true, mutation);
             }
         } catch (error) {
