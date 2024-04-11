@@ -2,19 +2,9 @@
 // @name         KES (Pam Tests)
 // @namespace    https://github.com/pamasich
 // @license      MIT
-<<<<<<< HEAD
 // @version      PAM
 // @description  Kbin Enhancement Suite — Pam Testing Edition
 // @author       Pamasich
-||||||| b314df8
-// @version      4.0.0-beta.72
-// @description  Kbin Enhancement Suite
-// @author       aclist
-=======
-// @version      4.1.0-beta.2
-// @description  Kbin Enhancement Suite
-// @author       aclist
->>>>>>> mod/default-sort
 // @match        https://kbin.social/*
 // @match        https://kbin.earth/*
 // @match        https://kbin.run/*
