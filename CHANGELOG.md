@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 4.1.0
+### Fixed
+
+- Move federation warning: ensure that the add-on also applies to pages on the All Content area (kbin only)
+- Remove extraneous double border on KES icon in navbar when hovering
+
 ## 4.0.0
 ### Added
 - Unsanitize CSS (Pamasich): unsanitizes custom CSS on magazines to restore working functionality of custom styles
@@ -8,7 +14,7 @@ All notable changes to this project will be documented in this file.
 - Added a "Fixes" category to the sidebar that holds add-ons responsible for patches, fixes, and connecting glue
 
 ### Changed
-- Mail label: this add-on was split into two, with the "Label submission" add-on being added
+- Mail label: this add-on was split into two, with the "Add submission prefix" add-on being added
 - Code syntax highlighting: now treats "Repair codeblocks" as a necessary dependency, so the act of turning on "Code syntax highlighting" will perforce turn on "Repair codeblocks"
 - Move federation warning to sidebar: updated this add-on to also support profile pages
 - Repair codeblocks: now treats "Code syntax highlighting" as dependent, so the act of turning off "Repair codeblocks" will perforce turn off "Code syntax highlighting"
@@ -24,8 +30,7 @@ All notable changes to this project will be documented in this file.
 - Clarify recipient: recipient label now appears on the direct message page, not only the inbox reply page
 - Code syntax highlighting: restored a missing divider line between the header and code block
 - Code syntax highlighting: unintended interaction with "Collapsible comments" add-on was causing header icons to be unclickable
-- Collapsible comments: fixed an issue where this add-on prevented the "code syntax highlighting add-on" from functioning correctly
-- Hover indicator: fixed an issue where the indicator would not appear unless the add-on's color field had been explicitly interacted with
+- Hover indicator: fixed an issue where the indicator would not appear unless the add-on's color field had been explicitly interacted with before
 - Magazine instance names: disabling this add-on would remove checkmarks created by the "Checkmark on subbed mags" add-on
 - Notification panel: fixed an issue where settings applied to the panel would sometimes leak into other menus
 - Report bug button: this add-on now also applies to the original post in a thread, but not on crossposts
@@ -39,6 +44,7 @@ All notable changes to this project will be documented in this file.
 
 ## 3.3.0
 ### Added
+- Alternative access to All Content (Pamasich): makes the magazine title in the navbar link to the All Content view and removes the dedicated button
 - Show new features added in current release: click the button on the search menu to list new add-ons incorporated into KES since the current minor version. E.g., if you are on version 3.2.x, this button
   will show all relevant add-ons since 3.2.0. Under the hood, this button performs a query using the `:new` keyword.
 - Search keywords: added a set of reserved keywords that can be used to search for add-ons matching certain criteria: `:new`, `:recurs`, and `:login`. These respectively will return a list of add-ons
@@ -61,6 +67,9 @@ All notable changes to this project will be documented in this file.
 ## 3.2.2
 ### Fixed
 - Expand post text in thread index: fixed an issue with extraneous newlines being inserted before and after a post body when fetching the remote text.
+- Collapsible comments: fixed issues with nested thread style failing to be removed when toggling off
+- Collapsible comments: fixed an issue with expand text buttons not working when nested comments are enabled
+- Collapsible comments: removed rounded corners from avatars, as this was undocumented/unspecified by the add-on
 
 ### Added
 - Expand post text in thread index: added the ability to set custom text labels for the Expand, Collapse, and Loading states.

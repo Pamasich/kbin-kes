@@ -211,11 +211,6 @@ const funcObj = {
             }
             .entry-comment {
                 border-color: transparent !important;
-                grid-template-areas:
-                "expando-icon avatar header vote"
-                "expando body body body"
-                "expando footer footer footer"
-                "expando kes-collapse-children kes-collapse-children kes-collapse-children";
                 grid-template-columns: 20px 20px auto min-content;
                 grid-template-rows: min-content auto auto;
                 display: grid;
@@ -248,6 +243,27 @@ const funcObj = {
                 }
                 `;
             }
+            const kbinStyle = `
+            .entry-comment {
+                grid-template-areas:
+                "expando-icon avatar header vote"
+                "expando body body body"
+                "expando footer footer footer"
+                "expando kes-collapse-children kes-collapse-children kes-collapse-children";
+            }
+            `;
+            const mbinStyle = `
+            .entry-comment {
+                grid-template-areas:
+                "expando-icon avatar header aside"
+                "expando body body body"
+                "expando footer footer footer"
+                "expando kes-collapse-children kes-collapse-children kes-collapse-children";
+            }
+            .comment-collapse {
+                display: none !important;
+            }
+            `;
             const hideDefaults = `
             .comment-wrap {
                 display: none;
@@ -255,6 +271,10 @@ const funcObj = {
             `;
             safeGM("addStyle", hideDefaults, "hide-defaults");
             safeGM("addStyle", style, "threaded-comments");
+            // eslint-disable-next-line no-undef
+            if (getInstanceType() === "kbin") safeGM("addStyle", kbinStyle, "kbin-kes-comments-style")
+            // eslint-disable-next-line no-undef
+            if (getInstanceType() === "mbin") safeGM("addStyle", mbinStyle, "mbin-kes-comments-style")
         }
         function applyToNewPosts () {
             let comments = document.querySelectorAll(".entry-comment:not(.nested)");
@@ -478,6 +498,8 @@ const funcObj = {
             clearMores();
             safeGM("removeStyle", "hide-defaults");
             safeGM("removeStyle", "threaded-comments");
+            safeGM("removeStyle", "kbin-kes-comments-style")
+            safeGM("removeStyle", "mbin-kes-comments-style")
         }
         if (!toggle) {
             teardown()
@@ -990,6 +1012,7 @@ const funcObj = {
     label:
 
     function labelOp (toggle) { // eslint-disable-line no-unused-vars
+        if (getInstanceType() === "mbin") return // eslint-disable-line no-undef
         if (toggle) {
             let settings = getModSettings("labelcolors");
             let fg = settings["fgcolor"];
@@ -2857,15 +2880,16 @@ const funcObj = {
         // ==/UserScript==
 
         const loc = window.location.href.split('/')
-        // only run on magazine/profile pages
-        if ((loc[3] !== "m") && (loc[3] !== "u")) return;
+        // only run on magazine, profile, and "all content" pages
+        if ((loc[3] !== "m") && (loc[3] !== "u") && (loc[3] !== "*")) return;
+        if ((loc[3] === "*") && (loc[4] !== "m")) return;
 
         let settings = getModSettings("moveFederationWarning");
         let alertBox = $(".alert.alert__info");
         let insertAfterQuery = "";
 
         if(toggle) {
-            if (loc[3] === "m") {
+            if ((loc[3] === "m") || (loc[3] === "*")) {
                 insertAfterQuery = "#sidebar .magazine .magazine__subscribe";
             } else {
                 insertAfterQuery = "#sidebar .section.user-info";

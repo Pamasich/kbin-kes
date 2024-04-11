@@ -2,9 +2,19 @@
 // @name         KES (Pam Tests)
 // @namespace    https://github.com/pamasich
 // @license      MIT
+<<<<<<< HEAD
 // @version      PAM
 // @description  Kbin Enhancement Suite — Pam Testing Edition
 // @author       Pamasich
+||||||| b314df8
+// @version      4.0.0-beta.72
+// @description  Kbin Enhancement Suite
+// @author       aclist
+=======
+// @version      4.1.0-beta.2
+// @description  Kbin Enhancement Suite
+// @author       aclist
+>>>>>>> mod/default-sort
 // @match        https://kbin.social/*
 // @match        https://kbin.earth/*
 // @match        https://kbin.run/*
@@ -268,7 +278,7 @@ function constructMenu (json, layoutArr, isNew) {
         let modsHR = " (" + activeMods + "/" + totalMods + ")"
         return modsHR
     }
-    function getComputedFontSize(string){
+    function getComputedFontSize (string) {
         if (typeof string === 'number') return string
         if (isNaN(parseFloat(string)) === false) {
             return parseFloat(string)
