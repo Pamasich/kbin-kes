@@ -3424,7 +3424,47 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
 
     omni:
 
-    function omniInit (toggle) { // eslint-disable-line no-unused-vars
+    function magInstanceEntry (toggle) { // eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         Magazine Instance Names
+        // @namespace    https://github.com/aclist
+        // @version      0.1
+        // @description  Shows instance names next to non-local magazines
+        // @author       artillect
+        // @match        https://kbin.social/*
+        // @license      MIT
+        // ==/UserScript==
+        const path = window.location.href.split('/')
+        if ((path[3] === "m") || (path[3] === "magazines")) return
+        function showMagInstances () {
+            $('.magazine-inline').each(function () {
+                // Check if community is local
+                if (!$(this).hasClass('instance')) {
+                    $(this).addClass('instance');
+                    // Get community's instance from their profile link
+                    var magInstance = $(this).attr('href').split('@')[1];
+                    // Check if community's link includes an @
+                    if (magInstance) {
+                        // Add instance name to community's name
+                        $(this).html($(this).html() + '<span class="mag-instance">@' + magInstance + '</span>');
+                    }
+                }
+            });
+        }
+        function hideCommunityInstances () {
+            $('.magazine-inline.instance').each(function () {
+                $(this).removeClass('instance');
+                $(this).html($(this).html().split('<span class="mag-instance">@')[0]);
+            });
+        }
+        //const localInstance = window.location.href.split('/')[2];
+        if (toggle) {
+            showMagInstances();
+        } else {
+            hideCommunityInstances();
+        }
+    }
+,
 
         const kesActive = 'kes-subs-active'
         const omniCSS = `
@@ -3969,6 +4009,17 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
             }
         }
 
+        function modSelected () {
+            let state
+            document.querySelectorAll('.kes-option').forEach((mod) => {
+                if ((mod.style.opacity === "1") && mod.innerText === "Change font size") {
+                    state = true
+                }
+            })
+            console.log(state)
+            return state
+        }
+
         function setOpacity (value) {
             const kesModalContent = document.querySelector(modalContent);
             const kesModalContainer = document.querySelector(modalContainer);
@@ -3982,7 +4033,7 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
             clearTimeout(oldID)
 
             if (kesModalOpen()) {
-                setOpacity(0.2)
+                if (modSelected()) setOpacity(0.2)
             }
             const css = `
             /* MESSAGES */
@@ -4094,6 +4145,1244 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
         } else {
             safeGM("removeStyle", "resize-css")
             return
+        }
+    }
+,
+
+    hide_logo:
+
+    function toggleLogo (toggle) { // eslint-disable-line no-unused-vars
+        const prefix = "https://raw.githubusercontent.com/aclist/kbin-kes/main/images"
+        const kibby = `${prefix}/kbin_logo_kibby.svg`
+        const kibbyMini = `${prefix}/kibby-mini.svg`
+        const kbinMini = `${prefix}/kbin-mini.svg`
+
+        function getDefaultLogo () {
+            const keyw = document.querySelector('meta[name="keywords"]').content.split(',')[0]
+            const defaultLogo = `/${keyw}_logo.svg`;
+            return defaultLogo
+        }
+
+        function updateLogo (link) {
+            $('.brand a').show();
+            const img = document.querySelector('.brand a img');
+            img.setAttribute("src", link);
+        }
+
+        function changeLogo () {
+            const ns = "changelogo";
+
+            const settings = getModSettings(ns);
+            let opt = settings["logotype"];
+            switch (opt) {
+            case "Hidden":
+                updateLogo(getDefaultLogo())
+                $('.brand a').hide();
+                break;
+            case "Kibby":
+                updateLogo(kibby);
+                break;
+            case "Kbin (no text)":
+                updateLogo(kbinMini);
+                break;
+            case "Kibby (no text)":
+                updateLogo(kibbyMini);
+                break;
+            }
+        }
+
+        function restoreLogo () {
+            $('.brand').show();
+            updateLogo(getDefaultLogo());
+
+        }
+
+        if (toggle) {
+            changeLogo();
+        } else {
+            restoreLogo();
+        }
+    }
+,
+
+    timestamp:
+
+    function updateTime (toggle) { // eslint-disable-line no-unused-vars
+        const ns = 'timestamp'
+        let times = document.querySelectorAll('.timeago')
+        const settings = getModSettings(ns);
+        if (toggle) {
+            times.forEach((time) => {
+                if (time.innerText === "just now") {
+                    return
+                }
+                if (time.innerText.indexOf("seconds") > -1) {
+                    return
+                }
+                let iso = time.getAttribute('datetime');
+                let isoYear = (iso.split('T')[0]);
+                let isoTime = (iso.split('T')[1]);
+                isoTime = (isoTime.split('+')[0]);
+                let cleanISOTime = isoYear + " @ " + isoTime;
+                let localTime = new Date(iso);
+                let localAsISO = localTime.toLocaleString('sv').replace(' ', ' @ ');
+                let offset = "offset";
+                switch (settings[offset]) {
+                case "UTC":
+                    time.innerText = cleanISOTime;
+                    break;
+                case "Local time":
+                    time.innerText = localAsISO;
+                    break;
+                default:
+                    break;
+                }
+            });
+        } else {
+            return
+        }
+    }
+,
+
+    report_bug:
+
+    function bugReportInit (toggle) { // eslint-disable-line no-unused-vars
+        const reportURL = 'https://github.com/aclist/kbin-kes/issues/new?assignees=&labels=bug&projects=&template=bug_report.md' +
+            '&title=[BUG]+<Your title here>&body='
+        const items = document.querySelectorAll('.entry-comment');
+
+        //only apply on threads
+        if (window.location.href.split('/')[5] != "t") return
+
+        function addBugReport (item) {
+            let postID = item.getAttribute("id");
+            let bareURL = window.location.href.split("#")[0];
+            let originURL = bareURL + "%23" + postID;
+            let footer = `%0A%0AReposted from kbin:%0A${originURL}`;
+            let postBody = item.querySelector('.content').innerText;
+            let postFooter = item.querySelector('footer menu .dropdown ul');
+            let newListItem = document.createElement('li');
+            let newHref = document.createElement('a');
+            newListItem.className = "kes-report-bug";
+            newHref.setAttribute("href", reportURL + postBody + footer);
+            newHref.textContent = "Report KES bug";
+            newListItem.appendChild(newHref);
+            newListItem.style.cssText = "color: white";
+            postFooter.appendChild(newListItem)
+        }
+        if (toggle) {
+            items.forEach((item) => {
+                if (item.querySelector('.kes-report-bug')) {
+                    $('.kes-report-bug').show();
+                    return
+                }
+                addBugReport(item);
+            });
+            addBugReport(document.querySelector('article'))
+        } else {
+            $('.kes-report-bug').hide();
+        }
+    }
+,
+
+    mail:
+
+    function addMail (toggle) { // eslint-disable-line no-unused-vars
+        function insertElementAfter (target, element) {
+            if (target.nextSibling) {
+                target.parentNode.insertBefore(element, target.nextSibling);
+            } else {
+                target.parentNode.appendChild(element);
+            }
+        }
+
+        function getUsername (item) {
+            try {
+                if (item.href.split('/u/')[1].charAt(0) == '@') {
+                    return null
+                }
+                return item.href.split('/u/')[1];
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function addLink (settings) {
+            const itemsSelector = '.user-inline';
+            const items = document.querySelectorAll(itemsSelector);
+            items.forEach((item) => {
+                const username = getUsername(item);
+                if (!username) return;
+                if (username === self_username) return;
+                const sib = item.nextSibling
+                let link
+                try {
+                    if ((sib) && (sib.nodeName === "#text")) {
+                        link = document.createElement('a');
+                        const ownInstance = window.location.hostname;
+                        link.setAttribute('href', `https://${ownInstance}/u/${username}/message`);
+                        insertElementAfter(item, link);
+                    } else {
+                        link = sib;
+                    }
+                } finally {
+                    if (link) {
+                        if (settings["type"] == "Text") {
+                            link.className = 'kes-mail-link';
+                            link.innerText = settings["text"];
+                            link.style.cssText += 'margin-left: 5px;text-decoration:underline';
+                        } else {
+                            link.innerText = "";
+                            link.className = 'kes-mail-link fa fa-envelope'
+                            link.style.cssText += 'margin-left: 5px;text-decoration:none';
+                        }
+                    }
+                }
+            });
+        }
+
+        const login = document.querySelector('.login');
+        const settings = getModSettings("mail")
+        if (!login) return;
+        const self_username = login.href.split('/')[4];
+        if (toggle) {
+            addLink(settings);
+        } else {
+            $('.kes-mail-link').remove();
+        }
+    }
+,
+
+    move_federation_warning:
+
+    function moveFederationWarningEntry (toggle) { //eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         Kbin: Move federation alert
+        // @match        https://kbin.social/*
+        // @match        https://lab2.kbin.pub/*
+        // @match        https://lab3.kbin.pub/*
+        // @match        https://fedia.io/*
+        // @match        https://karab.in/*
+        // @match        https://kbin.cafe/*
+        // @version      1.0
+        // @description  Moves the magazine federation warning to the sidebar's magazine info panel
+        // @author       PrinzKasper
+        // @namespace    https://github.com/jansteffen
+        // @icon         https://kbin.social/favicon.svg
+        // @license      MIT
+        // ==/UserScript==
+
+        const loc = window.location.href.split('/')
+        // only run on magazine, profile, and "all content" pages
+        if ((loc[3] !== "m") && (loc[3] !== "u") && (loc[3] !== "*")) return;
+        if ((loc[3] === "*") && (loc[4] !== "m")) return;
+
+        let settings = getModSettings("moveFederationWarning");
+        let alertBox = $(".alert.alert__info");
+        let insertAfterQuery = "";
+
+        if(toggle) {
+            if ((loc[3] === "m") || (loc[3] === "*")) {
+                insertAfterQuery = "#sidebar .magazine .magazine__subscribe";
+            } else {
+                insertAfterQuery = "#sidebar .section.user-info";
+            }
+
+            if(settings["action"] === "Hide completely") {
+                alertBox.hide();
+            } else {
+                alertBox.show();
+            }
+        } else {
+            const options = document.querySelectorAll('#main #options')
+            insertAfterQuery = options[options.length-1]
+            alertBox.show();
+        }
+
+        let insertAfter = $(insertAfterQuery);
+
+        if(alertBox !== null && insertAfter !== null) {
+            insertAfter.after(alertBox);
+        }
+    }
+,
+
+    hide_thumbs:
+
+    function hideThumbs (toggle) { //eslint-disable-line no-unused-vars
+        const settings = getModSettings('hidethumbs')
+        const index = 'kes-index-thumbs'
+        const inline = 'kes-inline-thumbs'
+        const thumbsCSS = `
+        .entry.section.subject figure, .no-image-placeholder {
+            display: none
+        }
+        `
+        const inlineCSS = `
+        .thumbs {
+            display:none
+        }
+        `
+        function apply (sheet, name) {
+            unset(name)
+            safeGM("addStyle", sheet, name)
+        }
+        function unset (name) {
+            safeGM("removeStyle", name)
+        }
+        if (toggle) {
+            if (settings["index"]) {
+                apply(thumbsCSS, index);
+            } else {
+                unset(index)
+            }
+            if (settings["inline"]) {
+                apply(inlineCSS, inline)
+            } else {
+                unset(inline)
+            }
+        } else {
+            unset(index)
+            unset(inline)
+        }
+    }
+,
+
+    adjust:
+
+    function adjustSite (toggle) { // eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         Color adjustments
+        // @namespace    https://github.com/aclist
+        // @version      0.2
+        // @description  Adjust appearance of site
+        // @author       minnieo
+        // @match        https://kbin.social/*
+        // @license      MIT
+        // ==/UserScript==
+        const sheetName = "#custom-kes-colors"
+
+        if (toggle) {
+            adjustColors(sheetName);
+        } else {
+            safeGM("removeStyle", sheetName);
+        }
+
+        function adjustColors (sheetName) {
+            let settings = getModSettings('adjust');
+            let sepia = `${settings.sepia * 10}%`;
+            let hue = `${settings.hueRotate * 10}deg`;
+            let bright = `${(settings.bright * 10) + 100}%`;
+            let saturate = `${(settings.saturate * 10) + 100}%`;
+            let contrast = `${(settings.contrast * 10) + 100}%`;
+            let upvoteCol = getHex(settings.upvote); // eslint-disable-line no-undef
+            let downvoteCol = getHex(settings.downvote); // eslint-disable-line no-undef
+            let boostCol = getHex(settings.boost); // eslint-disable-line no-undef
+
+
+            const customCSS = `
+                html {
+                    filter: sepia(${sepia}) hue-rotate(${hue}) brightness(${bright}) saturate(${saturate}) contrast(${contrast});
+                }
+                .vote .active.vote__up button {
+                    color: ${upvoteCol};
+                    ${settings.border ? `border: 2px solid ${upvoteCol};` : ''}
+                }
+                .vote .active.vote__down button {
+                    color: ${downvoteCol};
+                    ${settings.border ? `border: 2px solid ${downvoteCol};` : ''}
+                }
+                .entry footer menu > a.active, .entry footer menu > li button.active {
+                    color: ${boostCol};
+                    text-decoration: none;
+                }
+            `;
+            safeGM("removeStyle", sheetName);
+            safeGM("addStyle", customCSS, sheetName)
+        }
+    }
+,
+
+    alpha_sort_subs:
+
+    function alphaSortInit (toggle) { // eslint-disable-line no-unused-vars
+        const ind = window.location.href.split('/')[5]
+        if (!ind) return
+        if ((ind.indexOf('subscriptions') < 0) && (ind.indexOf('followers') < 0)) return
+        const ul = document.querySelector('.section.magazines.magazines-columns ul,.section.users.users-columns ul')
+        const obj = {}
+
+        if (toggle) {
+            const mags = document.querySelectorAll('.section.magazines.magazines-columns ul li a,.section.users.users-columns ul li a');
+            const namesArr = []
+
+            mags.forEach((item) => {
+                const dest = item.href;
+                const hrName = item.innerText;
+                obj[hrName] = dest
+                namesArr.push(hrName);
+            });
+
+            const sorted = namesArr.sort((a, b) => {
+                return a.localeCompare(b, undefined, { sensitivity: 'base' });
+            });
+
+            const outer = document.querySelector('.section.magazines.magazines-columns,.section.users.users-columns')
+            $(ul).hide();
+
+            for (let i =0; i<sorted.length; ++i) {
+                const myListItem = document.createElement('li');
+                myListItem.className = "alpha-sorted-subs"
+                const mySubsLink = document.createElement('a');
+                mySubsLink.setAttribute('href', obj[sorted[i]]);
+                mySubsLink.innerText = namesArr[i];
+                mySubsLink.className = 'subs-nav';
+                myListItem.append(mySubsLink);
+                outer.append(myListItem);
+            }
+
+        } else {
+            $('.alpha-sorted-subs').remove();
+            $(ul).show();
+        }
+    }
+,
+
+    expand_posts:
+
+    function expandPostsInit (toggle) { // eslint-disable-line no-unused-vars
+
+        async function update (response) {
+            const xml = response.response
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xml, "text/html");
+            const articleId = doc.querySelector('article').id
+            const postBody = doc.querySelector('.content').innerText
+            const arr = Array.from(document.querySelectorAll('.entry'))
+            const res = arr.find((el) => el.id === articleId);
+            const oldBody = res.querySelector('.short-desc p');
+            const settings = getModSettings("expand-posts")
+            const collapseLabel = settings.collapse
+            const newButton = makeButton(collapseLabel, res)
+            newButton.className = 'kes-collapse-post-button'
+
+            oldBody.innerText = postBody
+            oldBody.appendChild(newButton)
+            if (oldBody.childNodes[0].nodeName === "BR") {
+                oldBody.children[0].remove()
+            }
+            const prev = newButton.previousElementSibling
+            const prevOfPrev = newButton.previousElementSibling.previousElementSibling
+            if (prev.nodeName === "BR" && prevOfPrev.nodeName=== "BR") {
+                prevOfPrev.remove()
+            }
+        }
+        function makeButton (text, parent) {
+            const button = document.createElement('a')
+            const br = document.createElement('br')
+            button.innerText = text
+            button.className = 'kes-expand-post-button'
+            button.style.cursor = 'pointer'
+            button.addEventListener('click', (e) => {
+                const mode = e.target.innerText
+                const settings = getModSettings("expand-posts")
+                const loadingLabel = settings.loading
+                const expandLabel = settings.expand
+                if (mode === expandLabel) {
+                    button.innerText = loadingLabel
+                    button.className = 'kes-loading-post-button'
+                    const link = parent.querySelector('header h2 a')
+                    genericXMLRequest(link, update)
+                } else {
+                    const body = parent.querySelector('.short-desc p')
+                    const ar = body.innerText.split('\n')
+                    for (let i = 0; i < ar.length; ++i) {
+                        if (ar[i]) {
+                            body.innerText = ar[i] + '...'
+                            button.innerText = expandLabel
+                            button.className = 'kes-expand-post-button'
+                            body.appendChild(br)
+                            body.appendChild(button)
+                            break
+                        }
+                    }
+                }
+            });
+            return button
+        }
+        function propagateButtons () {
+            const entries = document.querySelectorAll('.entry')
+            entries.forEach((entry) => {
+                const b = entry.querySelector('.short-desc p')
+                const br = document.createElement('br')
+                if (b) {
+                    const end = b.innerText.slice(-3)
+                    if (end == "...") {
+                        br.id = "kes-expand-divider"
+                        const button = makeButton(expandLabel, entry)
+                        b.appendChild(br)
+                        b.appendChild(button)
+                    }
+                }
+            });
+            updateButtonLabels();
+        }
+        function updateButtonLabels () {
+            const expandLabels = document.querySelectorAll('.kes-expand-post-button')
+            const loadingLabels = document.querySelectorAll('.kes-loading-post-button')
+            const collapseLabels = document.querySelectorAll('.kes-collapse-post-button')
+            expandLabels.forEach((label) =>{
+                label.innerText = expandLabel
+            });
+            collapseLabels.forEach((label) =>{
+                label.innerText = collapseLabel
+            });
+            loadingLabels.forEach((label) =>{
+                label.innerText = loadingLabel
+            });
+        }
+
+        const settings = getModSettings("expand-posts")
+        const loadingLabel = settings.loading
+        const expandLabel = settings.expand
+        const collapseLabel = settings.collapse
+        if (toggle) {
+            propagateButtons();
+        } else {
+            const oldButtons = document.querySelectorAll('.kes-expand-post-button')
+            const oldButtons2 = document.querySelectorAll('.kes-collapse-post-button')
+            oldButtons.forEach((button)=>{
+                button.remove();
+            });
+            oldButtons2.forEach((button)=>{
+                button.remove();
+            });
+        }
+    }
+,
+
+    thread_delta:
+
+    function threadDeltaInit (toggle) { // eslint-disable-line no-unused-vars
+        const settings = getModSettings('thread-delta');
+        const fgcolor = getHex(settings["fgcolor"]) // eslint-disable-line no-undef
+        const bgcolor = getHex(settings["bgcolor"]) // eslint-disable-line no-undef
+        const state = settings["state"]
+
+        const hostname = window.location.hostname;
+        const loc = window.location.pathname.split('/')
+        if (loc[1] != "m") {
+            return
+        }
+        const mag = loc[2]
+
+        function applyDeltas (counts) {
+            const nav = document.querySelector('.head-nav__menu')
+            const c = nav.querySelectorAll('a')
+            const prefix = " Δ "
+
+            let thread_delta
+            let blog_delta
+            let countBar
+
+            const thread_count = Number(c[1].innerText.split('(')[1].split(')')[0])
+            const blog_count = Number(c[2].innerText.split('(')[1].split(')')[0])
+
+            if (! document.querySelector('#kes-thread-delta-bar')) {
+                countBar = document.querySelector('#kes-thread-delta-bar')
+                const top = document.querySelector('body');
+                countBar = document.createElement('div');
+                countBar.id = 'kes-thread-delta-bar';
+                top.insertBefore(countBar, top.children[0])
+            } else {
+                countBar  = document.querySelector('#kes-thread-delta-bar')
+            }
+
+            countBar.style.height = "1rem"
+            countBar.style.fontSize = "0.6em"
+            countBar.style.textAlign = "center"
+            countBar.style.color = fgcolor
+            countBar.style.backgroundColor = bgcolor
+            if (state == "off") {
+                countBar.style.display = "none"
+            }
+            else {
+                countBar.style.display = ""
+            }
+            countBar.innerText = `Magazine: ${mag} | Threads: (${thread_count})`
+            if (counts[0]) {
+                thread_delta = (thread_count - counts[0])
+                if (thread_delta > 0) {
+                    countBar.style.display = ""
+                    countBar.innerText = countBar.innerText + `${prefix} ${thread_delta}`
+                }
+            }
+            countBar.innerText = countBar.innerText + ` | Microblogs: (${blog_count})`
+            if (counts[1]) {
+                blog_delta = (blog_count - counts[1])
+                if (blog_delta >0) {
+                    countBar.style.display = ""
+                    countBar.innerText = countBar.innerText + `${prefix} ${blog_delta}`
+                }
+            }
+
+            counts[0] = thread_count
+            counts[1] = blog_count
+
+            saveCounts(hostname, mag, counts)
+        }
+
+        async function loadCounts (hostname, mag) {
+            let counts
+            counts = await safeGM("getValue", `thread-deltas-${hostname}-${mag}`)
+            if (!counts) {
+                counts = []
+            }
+            applyDeltas(counts)
+        }
+
+        async function saveCounts (hostname, mag, counts) {
+            // eslint-disable-next-line no-unused-vars
+            const savedCounts = await safeGM("setValue", `thread-deltas-${hostname}-${mag}`, counts)
+        }
+
+        if (toggle) {
+            loadCounts(hostname, mag);
+        } else {
+            const countBar = document.querySelector('#kes-omni-tapbar')
+            if (countBar) {
+                countBar.remove();
+            }
+            const e = []
+            saveCounts(hostname, mag, e)
+        }
+    }
+,
+
+    hide_upvotes:
+
+    function hideUpvotes (toggle) { //eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         kbin Vote Hider
+        // @namespace    https://github.com/aclist
+        // @version      0.2
+        // @description  Hide upvotes, downvotes, and karma
+        // @author       artillect
+        // @match        https://kbin.social/*
+        // @license      MIT
+        // ==/UserScript==
+        if (toggle) {
+            $('form.vote__up').hide();
+        } else {
+            $('form.vote__up').show();
+        }
+    }
+,
+
+    hide_sidebar:
+
+    function hideSidebar (toggle) { // eslint-disable-line no-unused-vars
+
+        const obj = {
+            sidebar: '#sidebar',
+            mags: '#sidebar > .related-magazines',
+            users: '#sidebar > .active-users',
+            posts: '#sidebar > .posts',
+            threads: '#sidebar > .entries',
+            instance: '#sidebar > .kbin-promo',
+            intro: '.sidebar-options > .intro'
+        }
+
+        const settings = getModSettings('hide-sidebar');
+
+        const keys = Object.keys(obj);
+
+        if (toggle) {
+            for (let i = 0; i< keys.length; i++) {
+                let key = keys[i]
+                if (settings[key]) {
+                    $(obj[key]).hide();
+                } else {
+                    $(obj[key]).show();
+                }
+            }
+        } else {
+            for (let i = 0; i< keys.length; i++) {
+                let key = keys[i]
+                $(obj[key]).show();
+            }
+        }
+    }
+,
+
+    hover_indicator:
+
+    function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         Hover Indicator
+        // @namespace    https://github.com/aclist
+        // @version      0.1.0
+        // @description  applies a outline to hovered elements
+        // @author       minnieo
+        // @match        https://kbin.social/*
+        // @license      MIT
+        // ==/UserScript==
+        if (toggle) {
+            applyOutlines();
+        } else {
+            safeGM("removeStyle", "kes-hover-css")
+        }
+
+        function applyOutlines () {
+            const settings = getModSettings('hover');
+            const color = getHex(settings.color); // eslint-disable-line no-undef
+            const thickness = settings.thickness;
+
+            const sels = [
+                "a",
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "img",
+                "button",
+                "label",
+                "markdown-toolbar",
+                "textarea",
+                "i",
+                "time",
+                "small",
+                "div.content",
+                "ul",
+                "li",
+                "span",
+                "figure",
+                "input",
+                "div.checkbox",
+                "div.ts-wrapper",
+                "#scroll-top",
+                ".more",
+                "select:hover"
+
+            ]
+            const selectors = sels.join(':hover, ');
+            const mergedCSS = `${selectors} {
+                outline: ${thickness}px solid ${color};
+            }
+            p:not(div.content p):hover {
+                border: ${thickness}px solid ${color};
+            }
+            `;
+            const exclusions = `
+            li > form > button:hover, li > a, i > span, a > i, a > img, span > i, a > span, span > a, li > i, button > span, li > button, #scroll-top > i {
+                outline: none !important;
+            }
+
+            `
+            safeGM("removeStyle", "kes-hover-exclusions")
+            safeGM("removeStyle", "kes-hover-css")
+            safeGM("addStyle", mergedCSS, "kes-hover-css")
+            safeGM("addStyle", exclusions, "kes-hover-exclusions")
+        }
+    }
+,
+
+    thread_checkmarks:
+
+    function checksInit (toggle, mutation) { // eslint-disable-line no-unused-vars
+        const settings = getModSettings('checks');
+        const checkColor = settings["check-color"]
+        const threadIndex = document.querySelector('[data-controller="subject-list"]')
+        const user = document.querySelector('.login');
+        const username = user.href.split('/')[4];
+        const hostname = window.location.hostname
+
+        if ((!threadIndex) || (!username)) return
+
+        async function fetchMags (username) {
+            const loaded = await safeGM("getValue", `omni-user-mags-${hostname}-${username}`)
+            if (!loaded) return
+            setChecks(loaded)
+        }
+        function addCheck (subs, item) {
+            if (item.querySelector('#kes-omni-check')) return
+            const mag = item.getAttribute('href').split('/')[2]
+            if (subs.includes(mag)) {
+                const ch = document.createElement('span')
+                ch.style.color = getHex(checkColor); // eslint-disable-line no-undef
+                ch.id = 'kes-omni-check'
+                ch.innerText = " ✓"
+                //FIXME: append adjacent; collision with mag instance mod
+                item.after(ch)
+                //item.appendChild(ch)
+            }
+        }
+        function setChecks (subs) {
+            const exists = document.querySelector('#kes-omni-check')
+            if (exists) {
+                document.querySelectorAll('#kes-omni-check').forEach((item) => {
+                    item.style.color = getHex(checkColor); // eslint-disable-line no-undef
+                });
+            }
+            document.querySelectorAll('.magazine-inline').forEach((item) => {
+                addCheck(subs, item)
+            });
+        }
+
+        if (toggle) {
+            fetchMags(username);
+        } else {
+            const oldChecks = document.querySelectorAll('#kes-omni-check')
+            oldChecks.forEach((check) => {
+                check.remove();
+            });
+        }
+    }
+,
+
+    user_instance_names:
+
+    function userInstanceEntry (toggle) { // eslint-disable-line no-unused-vars
+        function showUserInstances () {
+            $('.user-inline').each(function () {
+                if (!$(this).hasClass('instance')) {
+                    $(this).addClass('instance');
+                    // Get user's instance from their profile link
+                    var userInstance = $(this).attr('href').split('@')[2];
+                    // Check if user's link includes an @
+                    if (userInstance) {
+                        // Add instance name to user's name
+                        $(this).html($(this).html() +
+                            '<span class="user-instance">@' +
+                            userInstance +
+                            '</span>');
+                    }
+                }
+            });
+        }
+        function hideUserInstances () {
+            $('.user-inline.instance').each(function () {
+                $(this).removeClass('instance');
+                $(this).html($(this).html().split('<span class="user-instance">@')[0]);
+            });
+        }
+        if (toggle) {
+            showUserInstances();
+        } else {
+            hideUserInstances();
+        }
+    }
+,
+
+    submission_label:
+
+    function addPrefix (toggle) { // eslint-disable-line no-unused-vars 
+
+        const settings = getModSettings("submission_label");
+        const label = settings["prefix"]
+        const css = `
+        article:not(.entry-cross) .user-inline::before {
+            content: " ${label} ";
+            font-weight: 400;
+        }
+        `;
+
+        if (toggle) {
+            safeGM("removeStyle", "submission-css")
+            safeGM("addStyle", css, "submission-css")
+        } else {
+            safeGM("removeStyle", "submission-css")
+        }
+    }
+,
+
+    hide_downvotes:
+
+    function hideDownvotes (toggle) { // eslint-disable-line no-unused-vars
+        // ==UserScript==
+        // @name         kbin Vote Hider
+        // @namespace    https://github.com/aclist
+        // @version      0.2
+        // @description  Hide upvotes, downvotes, and karma
+        // @author       artillect
+        // @match        https://kbin.social/*
+        // @license      MIT
+        // ==/UserScript==
+        if (toggle) {
+            $('form.vote__down').hide();
+        } else {
+            $('form.vote__down').show();
+        }
+    }
+,
+
+    kbin_federation_awareness:
+
+    function initKFA (toggle) { // eslint-disable-line no-unused-vars
+        /*
+            License: MIT
+            Original Author: CodingAndCoffee (https://kbin.social/u/CodingAndCoffee)
+        */
+
+        const kfaHasStrictModerationRules = [
+            'beehaw.org',
+            'lemmy.ml'
+        ];
+
+        function kfaIsStrictlyModerated (hostname) {
+            return kfaHasStrictModerationRules.indexOf(hostname) !== -1;
+        }
+
+        function kfaComponentToHex (c) {
+            const hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+        function kfaRgbToHex (r, g, b) {
+            return "#" + kfaComponentToHex(r) + kfaComponentToHex(g) + kfaComponentToHex(b);
+        }
+
+        function kfaHexToRgb (hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function kfaSubtractColor (hex, amount) {
+            let rgb = kfaHexToRgb(hex);
+            if (rgb.r > amount) {
+                rgb.r -= amount;
+            } else {
+                rgb.r = 0;
+            }
+            if (rgb.g > amount) {
+                rgb.g -= amount;
+            } else {
+                rgb.g = 0;
+            }
+            if (rgb.b > amount) {
+                rgb.b -= amount;
+            } else {
+                rgb.b = 0;
+            }
+            return kfaRgbToHex(rgb.r, rgb.g, rgb.b);
+        }
+
+        function kfaGetCss () {
+            let fedColor0 = kfaSettingsFed;
+            let fedColor1 = kfaSubtractColor(fedColor0, 50);
+            let fedColor2 = kfaSubtractColor(fedColor1, 50);
+            let fedColor3 = kfaSubtractColor(fedColor2, 50);
+            let modColor0 = kfaSettingsMod;
+            let modColor1 = kfaSubtractColor(modColor0, 50);
+            let modColor2 = kfaSubtractColor(modColor1, 50);
+            let modColor3 = kfaSubtractColor(modColor2, 50);
+            let homeColor0 = kfaSettingsHome;
+            let homeColor1 = kfaSubtractColor(homeColor0, 50);
+            let homeColor2 = kfaSubtractColor(homeColor1, 50);
+            let homeColor3 = kfaSubtractColor(homeColor2, 50);
+            if (kfaSettingsStyle === 'border') {
+                let commentFed = ` .comment.data-federated {  box-shadow: `;
+                let articleFed = ` article.data-federated {  box-shadow: `;
+                let commentMod = ` .comment.data-moderated {  box-shadow: `;
+                let articleMod = ` article.data-moderated {  box-shadow: `;
+                let commentHome = ` .comment.data-home {  box-shadow: `;
+                let articleHome = ` article.data-home {  box-shadow: `;
+                commentMod += `1px 0 0 ` + modColor0 + `, 2px 0 0 ` + modColor0 + `, 3px 0 0 ` + modColor1 + `, 4px 0 0 ` + modColor2 + `, 5px 0 0 ` + modColor3 + `; }`;
+                commentFed += `1px 0 0 ` + fedColor0 + `, 2px 0 0 ` + fedColor0 + `, 3px 0 0 ` + fedColor1 + `, 4px 0 0 ` + fedColor2 + `, 5px 0 0 ` + fedColor3 + `; }`;
+                commentHome += `1px 0 0 ` + homeColor0 + `, 2px 0 0 ` + homeColor0 + `, 3px 0 0 ` + homeColor1 + `, 4px 0 0 ` + homeColor2 + `, 5px 0 0 ` + homeColor3 + `; }`;
+                if (kfaSettingsArticleSide === 'left' || kfaSettingsArticleSide === 'both') {
+                    articleMod += `-1px 0 0 ` + modColor0 + `, -2px 0 0 ` + modColor0 + `, -3px 0 0 ` + modColor1 + `, -4px 0 0 ` + modColor2 + `, -5px 0 0 ` + modColor3;
+                    articleFed += `-1px 0 0 ` + fedColor0 + `, -2px 0 0 ` + fedColor0 + `, -3px 0 0 ` + fedColor1 + `, -4px 0 0 ` + fedColor2 + `, -5px 0 0 ` + fedColor3;
+                    articleHome += `-1px 0 0 ` + homeColor0 + `, -2px 0 0 ` + homeColor0 + `, -3px 0 0 ` + homeColor1 + `, -4px 0 0 ` + homeColor2 + `, -5px 0 0 ` + homeColor3;
+                }
+                if (kfaSettingsArticleSide === 'right' || kfaSettingsArticleSide === 'both') {
+                    if (kfaSettingsArticleSide === 'both') {
+                        articleMod += `, `;
+                        articleFed += `, `;
+                        articleHome += `, `;
+                    }
+                    articleMod += `1px 0 0 ` + modColor0 + `, 2px 0 0 ` + modColor0 + `, 3px 0 0 ` + modColor1 + `, 4px 0 0 ` + modColor2 + `, 5px 0 0 ` + modColor3;
+                    articleFed += `1px 0 0 ` + fedColor0 + `, 2px 0 0 ` + fedColor0 + `, 3px 0 0 ` + fedColor1 + `, 4px 0 0 ` + fedColor2 + `, 5px 0 0 ` + fedColor3;
+                    articleHome += `1px 0 0 ` + homeColor0 + `, 2px 0 0 ` + homeColor0 + `, 3px 0 0 ` + homeColor1 + `, 4px 0 0 ` + homeColor2 + `, 5px 0 0 ` + homeColor3;
+                }
+                articleMod += `; }`;
+                articleFed += `; }`;
+                articleHome += `; }`;
+                return commentFed + articleFed + commentMod + articleMod + commentHome + articleHome;
+            } else if (kfaSettingsStyle === 'bubble') {
+                // Scale 1-10; Default 5 (i.e., 50%); 10 is 50% of 20. 20 * (x * 0.1)
+                const defaultScale = 20;
+                const setScale = defaultScale * (kfaSettingsScale * 0.1);
+                let fedStyle = ` .comment div.data-federated, article .data-federated { display: inline-block; width: ` + setScale + `px; height: ` + setScale + `px; border-radius: 10px; box-shadow: `;
+                let modStyle = ` .comment div.data-moderated, article .data-moderated { display: inline-block; width: ` + setScale + `px; height: ` + setScale + `px; border-radius: 10px; box-shadow: `;
+                let homeStyle = ` .comment div.data-home, article .data-home { display: inline-block; width: ` + setScale + `px; height: ` + setScale + `px; border-radius: 10px; box-shadow: `;
+                modStyle += `0 0 3px 2px ` + modColor0 + `; background-color: ` + modColor0 + `; margin-right: 4px; margin-left: 4px; }`;
+                fedStyle += `0 0 3px 2px ` + fedColor0 + `; background-color: ` + fedColor0 + `; margin-right: 4px; margin-left: 4px; }`;
+                homeStyle += `0 0 3px 2px ` + homeColor0 + `; background-color: ` + homeColor0 + `; margin-right: 4px; margin-left: 4px; }`;
+                return modStyle + fedStyle + homeStyle;
+            }
+        }
+
+        function kfaStartup () {
+            kfaInitClasses();
+            kfaInjectedCss = safeGM("addStyle",kfaGetCss());
+        }
+
+        function kfaShutdown () {
+            if (kfaInjectedCss) {
+                kfaInjectedCss.remove();
+            }
+            function removeOld () {
+                for (let i = 0; i<arguments.length; ++i) {
+                    arguments[i].forEach((el) => {
+                        el.remove();
+                    });
+                }
+            }
+            const dh = document.querySelectorAll('header .data-home')
+            const df = document.querySelectorAll('header .data-federated')
+            const dm = document.querySelectorAll('header .data-moderated')
+            const mh = document.querySelectorAll('.meta.entry__meta .data-home')
+            const mf = document.querySelectorAll('.meta.entry__meta .data-federated')
+            const mm = document.querySelectorAll('.meta.entry__meta .data-moderated')
+            removeOld(dh, df, dm, mh, mf, mm);
+        }
+
+        function findHostname (op) {
+            if (op.includes('@')) {
+                //other instances
+                const arr = op.split('@')
+                return arr[arr.length - 1]
+            } else {
+                //home instance
+                return window.location.hostname
+            }
+        }
+
+        function toggleClass (article, classname) {
+            const articleIndicator = document.createElement('div');
+            const articleAside = article.querySelector('aside');
+            articleAside.prepend(articleIndicator);
+
+            article.classList.toggle(classname);
+            articleIndicator.classList.toggle(classname);
+        }
+
+        function kfaInitClasses () {
+            document.querySelectorAll('#content article.entry:not(.entry-cross)').forEach(function (article) {
+                if (article.querySelector('[class^=data-]')) { return }
+                let op = article.querySelector('.user-inline').href
+                op = String(op)
+                const hostname = findHostname(op);
+                article.setAttribute('data-hostname', hostname);
+                let type
+
+                if (kfaIsStrictlyModerated(hostname)) {
+                    type = 'data-moderated'
+                } else if (hostname !== window.location.hostname) {
+                    type = 'data-federated'
+                } else {
+                    type = 'data-home'
+                }
+                toggleClass(article, type)
+            });
+
+            document.querySelectorAll('.comments blockquote.entry-comment').forEach(function (comment) {
+                if (comment.querySelector('[class^=data-]')) { return }
+                let commentHeader = comment.querySelector('header');
+                const userInfo = commentHeader.querySelector('a.user-inline');
+                if (userInfo) {
+                    const userHostname = userInfo.title.split('@').reverse()[0];
+                    let commentIndicator = document.createElement('div');
+
+                    if (kfaIsStrictlyModerated(userHostname)) {
+                        comment.classList.toggle('data-moderated');
+                        commentIndicator.classList.toggle('data-moderated');
+                    } else if (userHostname !== window.location.hostname) {
+                        comment.classList.toggle('data-federated');
+                        commentIndicator.classList.toggle('data-federated');
+                    } else {
+                        comment.classList.toggle('data-home');
+                        commentIndicator.classList.toggle('data-home');
+                    }
+                    commentHeader.prepend(commentIndicator);
+                }
+            });
+        }
+
+        let kfaInjectedCss;
+        let kfaSettingsFed;
+        let kfaSettingsMod;
+        let kfaSettingsHome;
+        let kfaSettingsArticleSide;
+        let kfaSettingsStyle;
+        let kfaSettingsScale;
+
+        if (toggle) {
+            const settings = getModSettings('kbinFedAware');
+            kfaSettingsFed = settings['kfaFedColor'];
+            kfaSettingsMod = settings['kfaModColor'];
+            kfaSettingsHome = settings['kfaHomeColor'];
+            kfaSettingsArticleSide = settings['kfaPostSide'];
+            kfaSettingsStyle = settings['kfaStyle'];
+            kfaSettingsScale = settings['kfaBubbleScale'];
+            kfaStartup();
+        } else {
+            kfaShutdown();
+        }
+    }
+
+,
+
+    mobile_cleanup:
+
+    function mobileHideInit (toggle) { // eslint-disable-line no-unused-vars
+        function mobileHideTeardown () {
+            let filterBtn
+            let viewBtn
+            try {
+                filterBtn = document.querySelector('button[aria-label="Filter by type"]');
+                viewBtn = document.querySelector('button[aria-label="Change view"]');
+            } finally {
+                if (viewBtn) {
+                    viewBtn.style.display = 'block'
+                }
+                if (filterBtn) {
+                    filterBtn.style.display = 'block'
+                }
+            }
+        }
+        function mobileHideSetup () {
+            let filterBtn
+            let viewBtn
+            const settings = getModSettings('mobilehide')
+            try {
+                filterBtn = document.querySelector('button[aria-label="Filter by type"]');
+                viewBtn = document.querySelector('button[aria-label="Change view"]');
+            } finally {
+                if (filterBtn) {
+                    if (settings["filter"]) {
+                        filterBtn.style.display = 'none'
+                    } else {
+                        filterBtn.style.display = 'block'
+                    }
+                }
+                if (viewBtn) {
+                    if (settings["view"]) {
+                        viewBtn.style.display = 'none'
+                    } else {
+                        viewBtn.style.display = 'block'
+                    }
+                }
+            }
+        }
+        if (toggle) {
+            mobileHideSetup();
+        } else {
+            mobileHideTeardown();
+        }
+    }
+,
+
+    hide_posts:
+
+    function hidePostsInit (toggle) { //eslint-disable-line no-unused-vars
+
+        async function wipeArray () {
+            await safeGM("setValue","hidden-posts","[]")
+        }
+        async function setArray () {
+            const val = await safeGM("getValue","hidden-posts")
+            if(val) {
+                setup(val)
+            } else {
+                await safeGM("setValue","hidden-posts","[]")
+                setup('[]')
+            }
+        }
+        async function addToArr (idArr,toHideID) {
+            idArr.push(toHideID)
+            const updatedArr = JSON.stringify(idArr)
+            await safeGM("setValue","hidden-posts",updatedArr)
+        }
+        function teardown (hp) {
+            $('.kes-hide-posts').hide();
+            for (let i = 0; i < hp.length; ++i) {
+                const toShow = document.querySelector('#entry-' + hp[i]);
+                $(toShow).show();
+                hideSib(toShow, 'show')
+            }
+            let hideThisPage = []
+            storeCurrentPage(hideThisPage);
+            wipeArray();
+        }
+        async function fetchCurrentPage () {
+            const hp = await safeGM("getValue","hide-this-page");
+            if (hp) {
+                teardown(hp);
+            }
+        }
+        async function storeCurrentPage (hideThisPage) {
+            await safeGM("setValue","hide-this-page",hideThisPage)
+        }
+        function hideSib (el, mode) {
+            const sib = el.nextSibling;
+            if (sib.className === "js-container") {
+                if (mode === 'hide') {
+                    $(sib).hide();
+                } else {
+                    $(sib).show();
+                }
+            }
+        }
+        function setup (array) {
+            const hideThisPage = []
+            const rawIdArr = array;
+            const idArr = JSON.parse(rawIdArr);
+            const posts = document.querySelectorAll('#content .entry')
+            posts.forEach((item) => {
+                const entryID = item.id.split('-')[1]
+                if (idArr.includes(entryID)) {
+                    $(item).hide();
+                    hideSib(item, 'hide');
+                    hideThisPage.push(entryID)
+                } else {
+                    const toHide = item.querySelector('.kes-hide-posts');
+                    if (toHide) {
+                        $(toHide).show();
+                        return
+                    }
+                    const hideButtonHolder = document.createElement('li');
+                    const hideButton = document.createElement('a');
+                    hideButtonHolder.appendChild(hideButton)
+                    hideButton.className = "stretched-link kes-hide-posts"
+                    hideButton.innerText = "hide";
+                    hideButton.setAttribute("hide-post-id",entryID);
+                    const footer = item.querySelector('footer menu');
+                    footer.appendChild(hideButtonHolder);
+                    hideButton.addEventListener('click',(event) => {
+                        const toHideID = event.target.getAttribute("hide-post-id");
+                        const toHide = document.querySelector('#entry-' + toHideID);
+                        $(toHide).hide();
+                        hideSib(toHide, 'hide')
+                        hideThisPage.push(toHideID)
+                        addToArr(idArr,toHideID);
+                        storeCurrentPage(hideThisPage)
+                    });
+                }
+            });
+
+        }
+        if (toggle) {
+            setArray();
+        } else {
+            fetchCurrentPage();
         }
     }
 ,
