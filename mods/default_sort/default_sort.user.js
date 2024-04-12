@@ -250,26 +250,4 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
     function defaultSort (pageType) {
         return getModSettings("default-sort")[`default${pageType}Sort`];
     }
-
-    /**
-     * Mocked for testing
-     * @todo Remove before finalizing pull request
-     */
-    function getInstanceType () {
-        return "mbin";
-    }
-
-    /**
-     * Mocked for testing
-     * @todo Remove before finalizing pull request
-     */
-    function getModSettings (someStr) {
-        return {
-            'defaultThreadSort': 'hot',
-            'defaultCommentSort': 'hot',
-            'defaultPostSort': 'hot',
-            'defaultProfileSort': 'newest',
-            'defaultMagazineSort': 'hot'
-        };
-    }
 }
