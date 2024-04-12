@@ -1,5 +1,53 @@
 [
   {
+    "name": "Customizable Default Sort Option",
+    "namespace": "default-sort",
+    "author": "Pamasich",
+    "version": "1.0.0",
+    "label": "Change Default Sort",
+    "desc": "Changes the default sort option used when viewing magazines or comments.",
+    "login": false,
+    "recurs": false,
+    "page": "general",
+    "fields": [
+      {
+        "type": "select",
+        "key": "defaultThreadSort",
+        "label": "Select default sort for threads:",
+        "values": ["top", "hot", "newest", "active", "commented"],
+        "initial": "hot"
+      },
+      {
+        "type": "select",
+        "key": "defaultCommentSort",
+        "label": "Select default sort for comments:",
+        "values": ["top", "hot", "active", "newest", "oldest"],
+        "initial": "hot"
+      },
+      {
+        "type": "select",
+        "key": "defaultPostSort",
+        "label": "Select default sort for microblogs (kbin only):",
+        "values": ["top", "hot", "newest", "active", "commented"],
+        "initial": "hot"
+      },
+      {
+        "type": "select",
+        "key": "defaultProfileSort",
+        "label": "Select default sort on profiles (kbin only):",
+        "values": ["top", "hot", "newest", "active", "commented"],
+        "initial": "newest"
+      },
+      {
+        "type": "select",
+        "key": "defaultMagazineSort",
+        "label": "Select default sort for magazines:",
+        "values": ["newest", "hot", "active", "abandoned"],
+        "initial": "hot"
+      }
+    ]
+  },  
+  {
     "name": "Always expand post bodies",
     "author": "shazbot",
     "version": "0.1.0",
