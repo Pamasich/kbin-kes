@@ -8,7 +8,7 @@
     "desc": "Changes the default sort option used when viewing magazines or comments.",
     "login": false,
     "recurs": false,
-    "entrypoint": "defaultSort",
+    "entrypoint": "default_sort",
     "page": "general",
     "fields": [
       {
