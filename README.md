@@ -17,29 +17,3 @@ first.
 
 Many issues are also given an additional label to indicate what type of work they are: a new `mod`, a `feature` for an
 existing one, or a `bugfix`.
-
-When an issue is given the `requires-approval` label, it doesn't necessarily literally mean that. If I plan to do
-something on KES itself or someone else's mod, I need to ensure they don't have non-committed code from having already
-tackled the issue before. Also, my changes might go against their vision. So those issues I'll want to contact the code's
-owner first, if they're still active.
-
-# Planning Work
-
-When I decide to tackle an issue, I move it to the `Planned` column of the board and write **two lists** as a comment on
-the issue:
-
-1. A list of clear goals to achieve for now
-2. What actions to take after completing all the aforementioned goals
-
-This might look like the following example:
-
-> Currently planned goals:
-> 
-> - Add to the readme an explanation of the `requires-approval` label
->
-> Then:
->
-> - Close this issue
-
-The goal here is to define goals for this specific partial task, not the entire issue. The *then* section doesn't just
-need to be to close the issue, it can also be to plan how to proceed ahead if the issue isn't finished yet.
