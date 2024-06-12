@@ -1,49 +1,43 @@
 {
-  "name": "Customizable Default Sort Option",
-  "namespace": "default-sort",
-  "author": "Pamasich",
-  "version": "1.0.0",
-  "label": "Change Default Sort",
-  "desc": "Changes the default sort option used when viewing magazines or comments.\n\nNote for mbin users:\nThe microblog and profile sort settings are non-functional on mbin.",
-  "login": false,
-  "recurs": false,
-  "page": "general",
-  "fields": [
-    {
-      "type": "select",
-      "key": "defaultThreadSort",
-      "label": "Select default sort for threads:",
-      "values": ["top", "hot", "newest", "active", "commented"],
-      "initial": "hot"
-    },
-    {
-      "type": "select",
-      "key": "defaultCommentSort",
-      "label": "Select default sort for comments:",
-      "values": ["top", "hot", "active", "newest", "oldest"],
-      "initial": "hot"
-    },
-    {
-      "type": "select",
-      "key": "defaultPostSort",
-      "label": "Select default sort for microblogs:",
-      "values": ["top", "hot", "newest", "active", "commented"],
-      "initial": "hot"
-    },
-    {
-      "type": "select",
-      "key": "defaultProfileSort",
-      "label": "Select default sort on profiles:",
-      "values": ["top", "hot", "newest", "active", "commented"],
-      "initial": "newest"
-    },
-    {
-      "type": "select",
-      "key": "defaultMagazineSort",
-      "label": "Select default sort for magazines:",
-      "values": ["newest", "hot", "active", "abandoned"],
-      "initial": "hot"
-    }
-  ]
-}
+    "name": "Customizable Default Sort Option",
+    "namespace": "default-sort",
+    "author": "Pamasich",
+    "version": "1.0.0",
+    "label": "Change Default Sort",
+    "desc": "Enables customizing the default sort order used.",
+    "login": false,
+    "recurs": false,
+    "entrypoint": "default_sort",
+    "page": "general",
+    "fields": [
+      {
+        "type": "select",
+        "key": "defaultThreadSort",
+        "label": "Select default sort for threads:",
+        "values": ["default", "top", "hot", "newest", "active", "commented"],
+        "initial": "default"
+      },
+      {
+        "type": "select",
+        "key": "defaultCommentSort",
+        "label": "Select default sort for comments:",
+        "values": ["default", "top", "hot", "active", "newest", "oldest"],
+        "initial": "default"
+      },
+      {
+        "type": "select",
+        "key": "defaultPostSort",
+        "label": "Select default sort for microblogs:",
+        "values": ["default", "top", "hot", "newest", "active", "commented"],
+        "initial": "default"
+      },
+      {
+        "type": "select",
+        "key": "defaultMagazineSort",
+        "label": "Select default sort for magazines:",
+        "values": ["default", "newest", "hot", "active", "abandoned"],
+        "initial": "default"
+      }
+    ]
+  }
   

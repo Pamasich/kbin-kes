@@ -24,7 +24,7 @@ try {
 }
 
 function getInstanceType() {
-    const links = document.getElementsByTagName("a");
+    const links = document.querySelectorAll('.kbin-promo .stretched-link');
 
     for (var i = 0, l = links.length; i < l; i++) {
         const link = links[i];
@@ -73,6 +73,30 @@ function genericXMLRequest (url, callback) {
             "Accept": "text/xml"
         }
     });
+}
+
+function isThread () {
+    const url = new URL(window.location).href.split('/')
+    if (url.includes("t")) {
+        return true
+    }
+    return false
+}
+
+function is_logged_in () {
+    const login = document.querySelector('.login .user-name')
+    if (login) {
+        return true
+    }
+    return false
+}
+
+function isProfile () {
+    const url = new URL(window.location).href.split('/')
+    if (url.includes("u")) {
+        return true
+    }
+    return false
 }
 
 window.safeGM = function (func,...args) {
