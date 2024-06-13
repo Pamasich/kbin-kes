@@ -497,9 +497,6 @@ const funcObj = {
      * @param {Boolean} isActive Whether the mod has been turned on
     */
     function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
-        if (isActive) setup();
-        else teardown();
-
         /**
          * The different page types for which users can choose their own default.
          * Each object contains the id used to access the chosen default option from the KES settings,
@@ -513,6 +510,9 @@ const funcObj = {
         };
         /** The attribute used to mark which sort option has been modified. */
         const markerAttribute = "defaultSort_originalPath";
+
+        if (isActive) setup();
+        else teardown();
 
         /**
          * When users access a page like '/m/kbinmeta', they get the default sort option applied as
