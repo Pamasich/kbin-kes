@@ -1,0 +1,11 @@
+{
+    "name": "Cancel Comment Button",
+    "author": "Pamasich",
+    "version": "0.1.0",
+    "label": "Cancel Replying",
+    "desc": "Adds a button to the reply UI that enables cancelling the reply and removing the UI again.",
+    "login": "false",
+    "recurs": "true",
+    "entrypoint": "cancel_comment",
+    "page": "threads"
+}
