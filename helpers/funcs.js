@@ -291,9 +291,7 @@ const funcObj = {
             newElement.setAttribute(`data-${markerAttributeNew}`, '');
             spoiler.setAttribute(`data-${markerAttributeOld}`, '');
 
-            if (getClickEnabled()) {
-                context.onclick = () => newElement.classList.toggle(showSpoilerClass);
-            }
+            context.onclick = () => newElement.classList.toggle(showSpoilerClass);
         }
 
         function applyCSS () {
@@ -317,10 +315,12 @@ const funcObj = {
                         visibility: hidden;
                     }
 
+                    ${getClickEnabled() ? `
                     &.${showSpoilerClass} * {
                         visibility: visible !important;
                     }
-
+                    ` : ''}
+                
                     ${getHoverEnabled() ? `
                     &:hover * {
                         visibility: visible !important;
