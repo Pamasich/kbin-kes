@@ -346,7 +346,7 @@ const funcObj = {
 
         /** @returns {boolean} */
         function getHoverEnabled () {
-            return getModSettings("blocky-spoilers")[`showOnHover`] == "on";
+            return getModSettings("blocky-spoilers")[`showOnHover`];
         }
 
         /** 
