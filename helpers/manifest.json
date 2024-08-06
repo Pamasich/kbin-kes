@@ -145,29 +145,26 @@
     "page": "threads"
   },
   {
-    "name": "Old Reddit style spoilers",
+    "name": "Reddit style spoilers",
     "namespace": "blocky-spoilers",
     "author": "Pamasich",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "label": "Alternate spoilers",
-    "desc": "Spoilers on kbin/mbin are implemented as an element that can be collapsed and expanded. This addon is meant for users who prefer spoilers to be obscured rather than hidden entirely, like how they work on Reddit for example.",
+    "desc": "Spoilers on kbin/mbin are implemented as an element that can be collapsed and expanded. This is different from the usual approach where the spoiler text is shown in full but obscured by a black bar until hovered over or clicked.\n\nThis addon changes spoilers to work like on other platforms you might be more familiar with.\n\nBy default you'll be able to toggle whether a spoiler is obscured by clicking on its header (the always visible text). Optionally, hovering is also supported to temporarily show a spoiler. But you'll still have to click to make it stick.",
     "login": false,
     "recurs": true,
     "entrypoint": "blocky_spoilers",
     "page": "general",
     "fields": [
       {
-        "type": "checkbox",
+        "type": "radio",
         "key": "showOnHover",
         "initial": false,
-        "label": "Actions that show the content:",
-        "checkbox_label": "hover"
-      },
-      {
-        "type": "checkbox",
-        "key": "showOnClick",
-        "initial": true,
-        "checkbox_label": "click"
+        "label": "Choose whether to display spoilers on hover:",
+        "values": [
+          "on",
+          "off"
+        ]
       }
     ]
   },
@@ -393,13 +390,31 @@
     "recurs": false,
     "entrypoint": "collapse_pins",
     "page": "threads",
-    "new_since": "4.2"
+    "new_since": "4.2",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Add colored outline",
+        "key": "outline",
+        "label": "Colored outline on pinned posts",
+        "values": [
+          "Add colored outline",
+          "No colored outline"
+        ]
+      },
+      {
+        "type": "color",
+        "initial": "--kbin-alert-info-link-color",
+        "key": "bordercolor",
+        "label": "Outline color"
+      }
+    ]
   },
   {
     "name": "Customizable Default Sort Option",
     "namespace": "default-sort",
     "author": "Pamasich",
-    "version": "dev-1.0.0",
+    "version": "1.0.0",
     "label": "Change default sort",
     "desc": "Enables customizing the default sort order used. When opening a sortable page, you automatically get redirected to your chosen default option.\n\nIf you do not get redirected, check whether your chosen option is available on your instance before reporting the issue.",
     "login": false,
