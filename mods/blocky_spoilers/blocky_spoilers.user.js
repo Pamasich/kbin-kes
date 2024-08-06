@@ -1,11 +1,9 @@
 /* globals removeCustomCSS, addCustomCSS */
 /**
- * Spoilers on kbin/mbin are weirdly implemented as <details> elements that are collapsed by default
- * but can be opened up. This isn't really how spoilers are usually done. The usual approach I've
- * seen is to obscure the text but keep it present on-page. This mod's goal is to bring that kind of
- * functionality to kbin/mbin's spoilers.
- * The main inspiration here is the block spoilers available on Old Reddit (not supported on the
- * redesigns).
+ * Spoilers on kbin/mbin work a bit differently than I'm used to from other platforms. Instead of 
+ * kbin's `<details>` approach, they're usually displayed as obscured blocks that show their 
+ * contents when hovered or clicked on.  
+ * This mod aims to switch out kbin's spoilers with ones closer to the ones seen on other platforms.
  * 
  * @param {boolean} isActive Whether the mod has been turned on
 */
@@ -16,7 +14,7 @@ function blockifySpoilers (isActive) { // eslint-disable-line no-unused-vars
     const markerAttributeOld = "blockySpoilers_markOldSpoiler";
     /** The id used for this mod's CSS element. */
     const cssId = "blockySpoilersCSS";
-    /** The class used to show the spoiler contents permanently when the spoiler context is clicked */
+    /** The class used to show the spoiler contents when the spoiler context is clicked */
     const showSpoilerClass = "showSpoiler";
 
     if (isActive) setup();
@@ -39,12 +37,18 @@ function blockifySpoilers (isActive) { // eslint-disable-line no-unused-vars
             .forEach((element) => element.removeAttribute(`data-${markerAttributeOld}`));
     }
 
-    /** @returns {HTMLElement[]} */
+    /**
+     * Retrieves all the spoilers that have not yet been handled by this mod.
+     * @returns {HTMLElement[]}
+     */
     function getUntreatedSpoilers () {
         return Array.from(document.querySelectorAll(`details:not([data-${markerAttributeOld}])`));
     }
 
-    /** @param {HTMLElement} spoiler */
+    /**
+     * Creates the new spoiler block next to a native spoiler.
+     * @param {HTMLElement} spoiler The original `<details>` element that should be replaced
+     */
     function transform (spoiler) {
         const newElement = document.createElement('div');
         const context = document.createElement('p');
@@ -63,7 +67,10 @@ function blockifySpoilers (isActive) { // eslint-disable-line no-unused-vars
         newElement.setAttribute(`data-${markerAttributeNew}`, '');
         spoiler.setAttribute(`data-${markerAttributeOld}`, '');
 
-        context.onclick = () => newElement.classList.toggle(showSpoilerClass);
+        context.onclick = () => {
+            if (getClickEnabled())
+                newElement.classList.toggle(showSpoilerClass);
+        }
     }
 
     function applyCSS () {
@@ -81,6 +88,10 @@ function blockifySpoilers (isActive) { // eslint-disable-line no-unused-vars
 
                 > p {
                     font-size: .8rem;
+
+                    ${getClickEnabled() ? `
+                    cursor: pointer;
+                    ` : ''}
                 }
                 
                 > div {
@@ -107,11 +118,16 @@ function blockifySpoilers (isActive) { // eslint-disable-line no-unused-vars
 
     /** @returns {boolean} */
     function getHoverEnabled () {
-        return getModSettings("blocky-spoilers")[`showOnHover`];
+        return getModSettings("blocky-spoilers")[`showOnHover`] == "on";
     }
 
-    /** @returns {boolean} */
+    /** 
+     * Currently always enabled, as this doesn't really need to be a setting.
+     * But I'm leaving the relevant code in in case I want to return the setting in the future.
+     * @returns {boolean}
+     */
     function getClickEnabled () {
-        return getModSettings("blocky-spoilers")[`showOnClick`];
+        return true;
+        //return getModSettings("blocky-spoilers")[`showOnClick`];
     }
 }

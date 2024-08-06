@@ -1241,7 +1241,165 @@
     "desc": "Prevent a magazine from appearing on the main subscriptions index, but do not explicitly block its content altogether if visiting the magazine directly. Adds a softblock button next to magazine names on the thread index. Softblocked mags can be managed via the magazine subscriptions index or via a specific magazine's sidebar. Disabling this add-on will clear your softblocked magazines",
     "login": false,
     "recurs": true,
+<<<<<<< HEAD
     "entrypoint": "softblock",
+||||||| b46f307
+    "desc": "Submit the contents of a thread comment verbatim as a bug report to the KES issue tracker. The button is available from the 'More' menu under comments.",
+    "entrypoint": "report_bug",
+    "page": "debug"
+  },
+  {
+    "name": "Add mail",
+    "author": "shazbot",
+    "version": "0.1.0",
+    "label": "Add mail icon",
+    "desc": "Add mail link to usernames if on own instance",
+    "login": false,
+    "recurs": true,
+    "entrypoint": "mail",
+    "namespace": "mail",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Text",
+        "key": "type",
+        "label": "Label type",
+        "values": [
+          "Text",
+          "Icon"
+        ]
+      },
+      {
+        "type": "text",
+        "initial": "PM",
+        "key": "text",
+        "label": "Label text"
+      }
+    ],
+    "page": "general"
+  },
+  {
+    "name": "Collapse pins",
+    "author": "shazbot",
+    "version": "0.1.0",
+    "label": "Collapse pinned posts",
+    "desc": "Adds a button to collapse/expand pinned posts in the thread index",
+    "login": false,
+    "recurs": false,
+    "entrypoint": "collapse_pins",
+    "page": "threads",
+    "new_since": "4.2"
+  },
+  {
+    "name": "Move federation warning to sidebar",
+    "author": "PrinzKasper",
+    "version": "1.0.0",
+    "label": "Move federation warning to sidebar",
+    "login": false,
+    "recurs": false,
+    "desc": "When viewing a magazine/profile from another instance, kbin displays a warning at the top of the feed. This mod moves the warning to the sidebar's info panel, or hides it completely.",
+    "entrypoint": "move_federation_warning",
+    "namespace": "moveFederationWarning",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Move to Sidebar",
+        "key": "action",
+        "label": "Choose which action to take",
+        "values": [
+          "Move to Sidebar",
+          "Hide completely"
+        ]
+      }
+    ],
+=======
+    "desc": "Submit the contents of a thread comment verbatim as a bug report to the KES issue tracker. The button is available from the 'More' menu under comments.",
+    "entrypoint": "report_bug",
+    "page": "debug"
+  },
+  {
+    "name": "Add mail",
+    "author": "shazbot",
+    "version": "0.1.0",
+    "label": "Add mail icon",
+    "desc": "Add mail link to usernames if on own instance",
+    "login": false,
+    "recurs": true,
+    "entrypoint": "mail",
+    "namespace": "mail",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Text",
+        "key": "type",
+        "label": "Label type",
+        "values": [
+          "Text",
+          "Icon"
+        ]
+      },
+      {
+        "type": "text",
+        "initial": "PM",
+        "key": "text",
+        "label": "Label text"
+      }
+    ],
+    "page": "general"
+  },
+  {
+    "name": "Collapse pins",
+    "author": "shazbot",
+    "version": "0.1.0",
+    "label": "Collapse pinned posts",
+    "desc": "Adds a button to collapse/expand pinned posts in the thread index",
+    "login": false,
+    "recurs": false,
+    "entrypoint": "collapse_pins",
+    "page": "threads",
+    "new_since": "4.2",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Add colored outline",
+        "key": "outline",
+        "label": "Colored outline on pinned posts",
+        "values": [
+          "Add colored outline",
+          "No colored outline"
+        ]
+      },
+      {
+        "type": "color",
+        "initial": "--kbin-alert-info-link-color",
+        "key": "bordercolor",
+        "label": "Outline color"
+      }
+    ]
+  },
+  {
+    "name": "Move federation warning to sidebar",
+    "author": "PrinzKasper",
+    "version": "1.0.0",
+    "label": "Move federation warning to sidebar",
+    "login": false,
+    "recurs": false,
+    "desc": "When viewing a magazine/profile from another instance, kbin displays a warning at the top of the feed. This mod moves the warning to the sidebar's info panel, or hides it completely.",
+    "entrypoint": "move_federation_warning",
+    "namespace": "moveFederationWarning",
+    "fields": [
+      {
+        "type": "radio",
+        "initial": "Move to Sidebar",
+        "key": "action",
+        "label": "Choose which action to take",
+        "values": [
+          "Move to Sidebar",
+          "Hide completely"
+        ]
+      }
+    ],
+>>>>>>> mod/alternative-spoilers
     "page": "threads"
   },
   {
