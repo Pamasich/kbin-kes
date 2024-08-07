@@ -147,7 +147,7 @@ function missingActorInfo (isActive) { // eslint-disable-line no-unused-vars
     async function buildOriginalLinkButton () {
         const btn = buildButton("View on original instance", 'placeholder');
         const domain = SEPARATED_PATH.domain;
-        const resourceName = `${SEPARATED_PATH.resource}@${SEPARATED_PATH.domain}`;
+        const resourceName = `acct:${SEPARATED_PATH.resource}@${SEPARATED_PATH.domain}`;
         const url = `https://${domain}/.well-known/webfinger?resource=${resourceName}`;
         const headers = new Headers({ 'Accept': 'application/activity+json' });
 
