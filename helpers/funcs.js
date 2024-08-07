@@ -686,7 +686,7 @@ const funcObj = {
                     // replace at end
                     new RegExp(`${baseRegex}$`, 'g'), `/${optionsToHandle.target}`
                 );
-                newLink = exampleLink.replaceAll(
+                newLink = newLink.replaceAll(
                     // replace within
                     new RegExp(`${baseRegex}\\/`, 'g'), `/${optionsToHandle.target}/`
                 );
