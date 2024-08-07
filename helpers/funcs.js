@@ -669,6 +669,8 @@ const funcObj = {
             if (options.length == 0) return; // this isn't a sortable page
 
             const pageType = determinePageType();
+            if (getChosenDefault(pageType) == 'default') return;
+
             const optionsToHandle = determineInstanceDefault(options, pageType.options);
             if (optionsToHandle == null) return; // all the options are already explicit
 
@@ -695,10 +697,7 @@ const funcObj = {
 
             if (!isUrlExplicitlySorted(window.location.pathname, pageType.options)) {
                 const userDefault = getChosenDefault(pageType);
-                var buttonToClick = optionsToHandle.element;
-                if (!(userDefault == "default")) {
-                    buttonToClick = findOptionByName(options, userDefault);
-                }
+                var buttonToClick = findOptionByName(options, userDefault);
                 buttonToClick.click();
             }
         }
