@@ -114,26 +114,6 @@
     "page": "profile"
   },
   {
-    "name": "Alternative access to the All Content view",
-    "namespace": "alt-all-content-access",
-    "author": "Pamasich",
-    "version": "1.0.1",
-    "label": "Alternative access to All Content",
-    "desc": "Makes the magazine title in the navbar link to the All Content view and removes the dedicated button instead.\n\nThis addon is useless on mbin.",
-    "login": false,
-    "recurs": false,
-    "entrypoint": "alt_all_content_access",
-    "page": "navbar",
-    "fields": [
-      {
-        "type": "checkbox",
-        "initial": true,
-        "key": "hideAllContentButton",
-        "checkbox_label": "Hide the All Content button"
-      }
-    ]
-  },
-  {
     "name": "Always expand post bodies",
     "author": "shazbot",
     "version": "0.1.0",
@@ -528,32 +508,6 @@
         "label": "Loading label"
       }
     ]
-  },
-  {
-    "name": "Fix Lemmy Code Blocks",
-    "author": "Pamasich",
-    "version": "1.0.1",
-    "label": "Repair Lemmy code blocks",
-    "desc": "Lemmy federates special <span> HTML tags on each line of its code blocks which /kbin displays in plaintext, resulting in code blocks being hard to read. This add-on removes those tags.\n\nThis addon is useless on mbin.",
-    "login": false,
-    "recurs": true,
-    "entrypoint": "fix_codeblocks",
-    "depends_off": [
-      "code_highlighting"
-    ],
-    "page": "fixes"
-  },
-  {
-    "name": "Fix Pagination Arrows",
-    "author": "Pamasich",
-    "version": "1.0.0",
-    "label": "Fix broken pagination",
-    "desc": "In some cases, like on the All Content view, the pagination is broken. The arrows behave like they're on the first page, regardless of which page the user is on. This addon ensures they work as expected.\n\nThis addon is useless on mbin.",
-    "login": false,
-    "recurs": false,
-    "entrypoint": "fix_pagination_arrows",
-    "new_since": "4.0",
-    "page": "fixes"
   },
   {
     "name": "Hide Downvotes",
@@ -1387,19 +1341,6 @@
     "recurs": true,
     "entrypoint": "unblur",
     "page": "threads"
-  },
-  {
-    "name": "Magazine CSS Fix — Unsanitize",
-    "namespace": "unsanitize-css",
-    "author": "Pamasich",
-    "version": "1.0.0",
-    "label": "Unsanitize Magazine CSS",
-    "desc": "Kbin supports custom CSS for magazines, but that functionality is limited because kbin wrongly replaces some important CSS characters with HTML escape codes, making the code partially non-functional. This addon fixes the issue by undoing those replacements, making the CSS actually work as expected.\n\nThis mod is unnecessary on mbin.",
-    "login": false,
-    "recurs": false,
-    "entrypoint": "unsanitize_css",
-    "new_since": "4.0",
-    "page": "fixes"
   },
   {
     "name": "User Instance Names",

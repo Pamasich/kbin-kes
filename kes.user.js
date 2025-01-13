@@ -1,12 +1,11 @@
 // ==UserScript==
-// @name         KES (Pam Tests)
-// @namespace    https://github.com/pamasich
+// @name         KES
+// @namespace    https://github.com/aclist
 // @license      MIT
 // @version      PAM
-// @description  Kbin Enhancement Suite — Pam Testing Edition
-// @author       Pamasich
+// @description  Kbin Enhancement Suite
+// @author       aclist
 // @match        https://kbin.social/*
-// @match        https://kbin.earth/*
 // @match        https://kbin.run/*
 // @match        https://lab2.kbin.pub/*
 // @match        https://lab3.kbin.pub/*
@@ -30,23 +29,23 @@
 // @icon         https://kbin.social/favicon.svg
 // @connect      raw.githubusercontent.com
 // @connect      github.com
-// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/safegm.user.js
-// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/kbin-mod-options.js
-// @require      https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/funcs.js
+// @require      https://raw.githubusercontent.com//kbin-kes/tests/helpers/safegm.user.js
+// @require      https://raw.githubusercontent.com//kbin-kes/tests/helpers/kbin-mod-options.js
+// @require      https://raw.githubusercontent.com//kbin-kes/tests/helpers/funcs.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js
 // @require      http://code.jquery.com/jquery-3.4.1.min.js
-// @resource     kes_layout https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/ui.json
-// @resource     kes_json https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/manifest.json
-// @resource     kes_css https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/helpers/kes.css
-// @downloadURL  https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/kes.user.js
-// @updateURL    https://raw.githubusercontent.com/Pamasich/kbin-kes/tests/kes.user.js
+// @resource     kes_layout https://raw.githubusercontent.com//kbin-kes/tests/helpers/ui.json
+// @resource     kes_json https://raw.githubusercontent.com//kbin-kes/tests/helpers/manifest.json
+// @resource     kes_css https://raw.githubusercontent.com//kbin-kes/tests/helpers/kes.css
+// @downloadURL  https://raw.githubusercontent.com//kbin-kes/tests/kes.user.js
+// @updateURL    https://raw.githubusercontent.com//kbin-kes/tests/kes.user.js
 // ==/UserScript==
 
 //START AUTO MASTHEAD
 const version = safeGM("info").script.version;
 const tool = safeGM("info").script.name;
-const repositoryURL = "https://github.com/Pamasich/kbin-kes/";
-const rawURL = "https://raw.githubusercontent.com/pamasich/kbin-kes/";
+const repositoryURL = "https://github.com//kbin-kes/";
+const rawURL = "https://raw.githubusercontent.com/aclist/kbin-kes/"
 const branch = "tests"
 const helpersPath = "helpers/"
 const branchPath = rawURL + branch + "/"
@@ -54,7 +53,7 @@ const versionFile = branchPath + "VERSION";
 const updateURL = branchPath + "kes.user.js";
 const bugURL = repositoryURL + "issues"
 const sponsorURL = "https://github.com/sponsors/aclist"
-const changelogURL = repositoryURL + "raw/" + branch + "/CHANGELOG.md"
+const changelogURL = repositoryURL + "blob/" + branch + "/CHANGELOG.md"
 const magURL = "https://kbin.social/m/enhancement"
 
 //resource URLs used by legacy GM. API
