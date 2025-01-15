@@ -1,7 +1,7 @@
 {
   "name": "Navbar icons",
   "author": "shazbot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "label": "Navbar icons as text",
   "desc": "Change navbar search/post icons to text strings",
   "login": false,
@@ -30,12 +30,6 @@
       "initial": "Post",
       "key": "post",
       "label": "Post icon"
-    },
-    {
-      "type": "text",
-      "initial": "Subs",
-      "key": "subs",
-      "label": "Subs icon"
     }
   ],
   "page": "navbar"
