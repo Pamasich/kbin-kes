@@ -1,20 +1,15 @@
 {
   "name": "Hide thumbnails",
   "author": "shazbot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "label": "Hide thumbnails",
   "login": false,
   "recurs": true,
-  "desc": "Hide thumbnails on threads and comments",
+  "desc": "Hide thumbnails in comments",
   "entrypoint": "hide_thumbs",
   "page": "general",
   "namespace": "hidethumbs",
   "fields": [
-    {
-      "type": "checkbox",
-      "key": "index",
-      "checkbox_label": "Hide on thread index"
-    },
     {
       "type": "checkbox",
       "key": "inline",
