@@ -1,7 +1,7 @@
 {
   "name": "Hide sidebar",
   "author": "shazbot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "label": "Hide sidebar elements",
   "login": false,
   "recurs": true,
@@ -15,6 +15,11 @@
       "key": "sidebar",
       "type": "checkbox",
       "checkbox_label": "Hide sidebar entirely"
+    },
+    {
+      "key": "subs",
+      "type": "checkbox",
+      "checkbox_label": "Subscriptions"
     },
     {
       "key": "mags",
