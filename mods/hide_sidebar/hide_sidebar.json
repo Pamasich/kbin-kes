@@ -50,6 +50,12 @@
       "key": "intro",
       "type": "checkbox",
       "checkbox_label": "Explore the fediverse intro text"
+    },
+    {
+      "label": "Behavior",
+      "key": "expand",
+      "type": "checkbox",
+      "checkbox_label": "Expand content if possible"
     }
   ]
 }
