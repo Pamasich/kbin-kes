@@ -2,7 +2,7 @@
 // @name         KES
 // @namespace    https://github.com/aclist
 // @license      MIT
-// @version      4.3.0-beta.8
+// @version      4.3.0-beta.9
 // @description  Kbin Enhancement Suite
 // @author       aclist
 // @match        https://kbin.social/*
@@ -30,7 +30,6 @@
 // @connect      raw.githubusercontent.com
 // @connect      github.com
 // @require      https://raw.githubusercontent.com/aclist/kbin-kes/testing/helpers/safegm.user.js
-// @require      https://raw.githubusercontent.com/aclist/kbin-kes/testing/helpers/kbin-mod-options.js
 // @require      https://raw.githubusercontent.com/aclist/kbin-kes/testing/helpers/funcs.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js
 // @require      http://code.jquery.com/jquery-3.4.1.min.js
