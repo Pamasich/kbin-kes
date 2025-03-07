@@ -23,7 +23,7 @@ function pinsInit (toggle) { // eslint-disable-line no-unused-vars
         return css
     }
 
-    const pt = getPageType(); // eslint-disable-line no-undef
+    const pt = getPageType();
     if (pt !== Mbin.Magazine) return
 
     function applyPins () {
