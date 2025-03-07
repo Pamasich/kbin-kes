@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 const Log = Object.freeze({
     Log: 1,
     Warn: 2,
