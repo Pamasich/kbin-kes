@@ -212,13 +212,16 @@ function getPageType () { //eslint-disable-line no-unused-vars
             if (window.location.href.includes("/reputation")) return Mbin.User.Reputation
             return Mbin.User.Default
         case "d":
-            if ((url.length === 6) && (window.location.href.includes("/comments"))) return Mbin.Domain.Comments
+            if ((url.length === 6) && (window.location.href.includes("/comments"))) 
+                return Mbin.Domain.Comments
             return Mbin.Domain.Default
         case "m":
             if (url[5] === undefined) return Mbin.Magazine
             if (url[5] === "microblog") return Mbin.Microblog
-            if ((url[5] === "t") && (window.location.href.includes("/favourites"))) return Mbin.Thread.Favorites
-            if ((url[5] === "t") && (window.location.href.includes("/up"))) return Mbin.Thread.Boosts
+            if ((url[5] === "t") && (window.location.href.includes("/favourites"))) 
+                return Mbin.Thread.Favorites
+            if ((url[5] === "t") && (window.location.href.includes("/up"))) 
+                return Mbin.Thread.Boosts
             return Mbin.Thread.Comments
         default:
             break;
