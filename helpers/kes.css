@@ -343,6 +343,7 @@ span.kes-update {
     height: 1em;
     position: relative;
     cursor: pointer;
+    -webkit-user-select: none;
     user-select: none;
 }
 
