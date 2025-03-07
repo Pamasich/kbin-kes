@@ -19,7 +19,7 @@ function log (string, level) { // eslint-disable-line no-unused-vars
 }
 
 //returns a generic loading prompt with spinner
-function makeLoader (id, text) {
+function makeLoader (id, text) { // eslint-disable-line no-unused-vars
     const modalCSS = `
     #${id}-filter-modal-bg {
         position: fixed;
@@ -106,7 +106,7 @@ function makeLoader (id, text) {
 }
 
 //removes a loading dialog created with makeLoader()
-function clearLoader (id) {
+function clearLoader (id) { // eslint-disable-line no-unused-vars
     document.querySelector(`#${id}-filter-modal-bg`)?.remove();
     safeGM("removeStyle", "mes-loader-css");
 }
@@ -228,7 +228,7 @@ function getPageType () { //eslint-disable-line no-unused-vars
     return "Unknown"
 }
 
-function isIndex () {
+function isIndex () { // eslint-disable-line no-unused-vars
     const pt = getPageType();
     switch (pt) {
         case Mbin.Domain.Default:
@@ -240,7 +240,7 @@ function isIndex () {
     }
 }
 
-function isThread () {
+function isThread () { // eslint-disable-line no-unused-vars
     const pt = getPageType();
     switch (pt) {
         case Mbin.Thread.Comments:
