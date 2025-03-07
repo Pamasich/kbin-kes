@@ -21,7 +21,6 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
     const urlParameterRegex = /\?.+/;
 
     if (isActive) setup();
-    else teardown();
 
     /**
      * When users access a page like '/m/kbinmeta', they get the default sort option applied as
@@ -46,14 +45,6 @@ function defaultSort (isActive) {  // eslint-disable-line no-unused-vars
             var buttonToClick = findOptionByName(options, userDefault);
             buttonToClick.click();
         }
-    }
-
-    /**
-     * This function is responsible for reversing the changes made by the setup() function.  
-     * In this case, that would be to make the native default option link to the implicitly sorted
-     * page again.
-     */
-    function teardown () {
     }
 
     /**
