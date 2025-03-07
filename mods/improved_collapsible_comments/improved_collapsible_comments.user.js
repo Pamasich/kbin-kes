@@ -33,11 +33,18 @@ function initCollapsibleComments (toggle, trigger, mutation) { // eslint-disable
             margin-bottom: 8px;
         }
 
-        .collapsed-comment .kes-collapse-children, .collapsed-comment .content, .collapsed-comment footer, .collapsed-comment .vote, .collapsed-comment .more {
+        .collapsed-comment .kes-collapse-children, 
+        .collapsed-comment .content, 
+        .collapsed-comment footer, 
+        .collapsed-comment .vote, 
+        .collapsed-comment .more {
             display: none !important;
         }
 
-        .entry-comment .kes-collapse-children, .entry-comment .content, .entry-comment footer, .entry-comment .vote {
+        .entry-comment .kes-collapse-children, 
+        .entry-comment .content, 
+        .entry-comment footer, 
+        .entry-comment .vote {
             opacity: 1;
             transition: opacity 0.2s ease;
         }
@@ -431,15 +438,17 @@ function initCollapsibleComments (toggle, trigger, mutation) { // eslint-disable
     }
     function restoreTree (className, item) {
         switch (className) {
-            case ".nested":
+            case ".nested": {
             //if parent has children container, reinsert children adjacent to parent
             //then remove children class
                 item.classList.remove('nested')
-                if (item.parentElement && item.parentElement.className === "kes-collapse-children") {
-                    const par = item.parentElement.parentElement
+                const parent = item.parentElement;
+                if (parent && parent.className === "kes-collapse-children") {
+                    const par = parent.parentElement
                     par.insertAdjacentElement("afterend", item)
                 }
                 break
+            }
             case ".listened":
                 item.classList.remove('listened')
                 break
@@ -477,7 +486,7 @@ function initCollapsibleComments (toggle, trigger, mutation) { // eslint-disable
     }
     if (mutation && mutation.addedNodes[0].className.indexOf('nested') === -1) {
         enterMain();
-    } else if (document.querySelector('.entry-comment.nested') || !document.querySelector('.comments')) {
+    } else if ($('.entry-comment.nested').length || !$('.comments').length) {
         return;
     } else {
         enterMain();
