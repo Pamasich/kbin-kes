@@ -1,14 +1,4 @@
 function easyEmoticon (toggle) { // eslint-disable-line no-unused-vars
-    // ==UserScript==
-    // @name         Kbin Easy Emoticon
-    // @namespace    https://github.com/aclist
-    // @version      0.7.8
-    // @description  Use slash commands for emoticons.
-    // @author       minnieo
-    // @match        https://kbin.social/*
-    // @license      MIT
-    // ==/UserScript==
-
     let eventListener;
 
     const emoticons = {
@@ -156,7 +146,9 @@ function easyEmoticon (toggle) { // eslint-disable-line no-unused-vars
     `;
 
         const greasyLink = document.createElement('a');
-        greasyLink.innerHTML = `<a href="https://greasyfork.org/en/scripts/469492-kbin-easy-emoticon" target="_blank">🔗 See the script on GreasyFork</a>`;
+        const url = "https://greasyfork.org/en/scripts/469492-kbin-easy-emoticon";
+        greasyLink.innerHTML 
+            = `<a href="${url}" target="_blank">🔗 See the script on GreasyFork</a>`;
         greasyLink.classList.add('gLink');
         greasyLink.style.cssText = `
        display: flex;
