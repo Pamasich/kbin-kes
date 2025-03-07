@@ -25,7 +25,7 @@ function dropdownEntry (toggle) { // eslint-disable-line no-unused-vars
         const selector = '.options__main li a:not(.active)'
         const selectList = document.createElement("select");
         selectList.setAttribute("id", "dropdown-select");
-        selectList.style.cssText += 'margin-left: 10px;height:fit-content;font-size:0.8em;padding:5px;margin-bottom:10px;width:30%';
+        selectList.style.cssText += 'margin-left: 10px;height:fit-content;font-size:0.8em;padding:5px;margin-bottom:10px;width:30%'; // eslint-disable-line max-len
         leftDiv.appendChild(selectList);
         buildDropdown(selector);
 
