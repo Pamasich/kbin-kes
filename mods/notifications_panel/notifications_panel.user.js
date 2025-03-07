@@ -202,7 +202,8 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
         let notificationsXML = parser.parseFromString(response.responseText, "text/html");
         const token = notificationsXML.querySelector('#push-subscription-div')
             .getAttribute('data-application-server-public-key');
-        let currentPage = notificationsXML.querySelector('[property="og:url"]').content.split('=')[1]
+        let currentPage = notificationsXML.querySelector('[property="og:url"]')
+            .content.split('=')[1]
         let currentPageInt = parseInt(currentPage)
         // 2025-01-19: there can be 25 messages before pagination occurs
         let sects = notificationsXML.querySelectorAll('.notification');
@@ -419,8 +420,10 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
                 siblingElement.parentElement.insertBefore(listItem, siblingElement);
             }
 
-            const counterElement = document.querySelector('.counter > [href="/settings/notifications"]');
-            const msgCounterElement = document.querySelector('.counter > [href="/profile/messages"]');
+            const counterElement 
+                = document.querySelector('.counter > [href="/settings/notifications"]');
+            const msgCounterElement 
+                = document.querySelector('.counter > [href="/profile/messages"]');
             let msgCount = 0;
             if (msgCounterElement) {
                 msgCount = parseInt(msgCounterElement.querySelector('.badge').innerText);
@@ -450,8 +453,10 @@ function notificationsPanel (toggle) { // eslint-disable-line no-unused-vars
     function shutdown () {
         const notiPanel = document.querySelector('li.notification-button');
         if (notiPanel) {
-            const msgCounterElement = document.querySelector('.counter > [href="/profile/messages"]');
-            const counterElement = document.querySelector('.counter > [href="/settings/notifications"]');
+            const msgCounterElement 
+                = document.querySelector('.counter > [href="/profile/messages"]');
+            const counterElement 
+                = document.querySelector('.counter > [href="/settings/notifications"]');
             $(msgCounterElement).show();
             $(counterElement).show();
             notiPanel.remove();
