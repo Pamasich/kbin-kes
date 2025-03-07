@@ -20,7 +20,7 @@ function clarifyRecipientInit (toggle) { // eslint-disable-line no-unused-vars
         document.querySelector('#mes-compose-holder').remove();
     }
 
-    const pt = getPageType(); // eslint-disable-line no-undef
+    const pt = getPageType();
     if (pt !== Mbin.User.DirectMessage) return
     const form = document.querySelector('form[name="message"]')
     if (!form) return
