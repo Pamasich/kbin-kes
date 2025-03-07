@@ -3,8 +3,9 @@ function toggleLogo (toggle) { // eslint-disable-line no-unused-vars
     const kibby = `${prefix}/kbin_logo_kibby.svg`
     const kibbyMini = `${prefix}/kibby-mini.svg`
     const kbinMini = `${prefix}/kbin-mini.svg`
-    const mbinNoText = "https://raw.githubusercontent.com/MbinOrg/mbin/refs/heads/main/assets/images/sources/mbin-notext.svg"
-    const mbin = "https://raw.githubusercontent.com/MbinOrg/mbin/refs/heads/main/assets/images/sources/mbin-logo.svg"
+    const mbinRepoUrl = "https://raw.githubusercontent.com/MbinOrg/mbin"
+    const mbinNoText = `${mbinRepoUrl}/refs/heads/main/assets/images/sources/mbin-notext.svg`
+    const mbin = `${mbinRepoUrl}/refs/heads/main/assets/images/sources/mbin-logo.svg`
 
     const logos = {
         "Kbin (no text)": kbinMini,
