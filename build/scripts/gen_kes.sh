@@ -140,11 +140,11 @@ main(){
     echo "//END AUTO MASTHEAD"
     awk 'x==1 {print $0} /END AUTO MASTHEAD/{x=1}' $base_file.bak
 }
-name=KES
+name=MES
 author=aclist
 license=MIT
 version=$(cat VERSION)
-desc="Kbin Enhancement Suite"
+desc="Mbin Enhancement Suite"
 branch=$(git branch --show-current)
 [[ -n $1 ]] && branch=$1
 base_file="kes.user.js"
