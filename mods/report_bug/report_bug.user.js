@@ -1,6 +1,10 @@
 function bugReportInit (toggle) { // eslint-disable-line no-unused-vars
-    const reportURL = 'https://github.com/aclist/kbin-kes/issues/new?assignees=&labels=bug&projects=&template=bug_report.md' +
-        '&title=[BUG]+<Your title here>&body='
+    const baseURL = "https://github.com/aclist/kbin-kes/issues/new"
+    const params = [ 
+        "assignees=", "labels=bug", "projects=", "template=bug_report.md", 
+        "title=[BUG]+<Your title here>", "body="
+    ];
+    const reportURL = `${baseURL}?${params.join("&")}`;
     const items = document.querySelectorAll('.entry-comment');
 
     //only apply on threads
