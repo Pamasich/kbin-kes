@@ -117,9 +117,11 @@ function filter (toggle, trigger, mutation) { // eslint-disable-line no-unused-v
         const XML = parser.parseFromString(json.html, "text/html");
         const u = XML.querySelector('.user__name span').innerText.split('\n')[1].trim()
         const age = XML.querySelector('.timeago').innerText.split(' ')
-        const repnum = XML.querySelector('header ul li:nth-of-type(3)').innerText.trim().split(' ')[2]
+        const repnum 
+            = XML.querySelector('header ul li:nth-of-type(3)').innerText.trim().split(' ')[2]
         const threadsnum = XML.querySelector('menu li:nth-of-type(1) a div:first-of-type').innerText
-        const commentsnum = XML.querySelector('menu li:nth-of-type(2) a div:first-of-type').innerText
+        const commentsnum 
+            = XML.querySelector('menu li:nth-of-type(2) a div:first-of-type').innerText
 
         if ((parseInt(commentsnum) === 0) && (parseInt(threadsnum > 2))) {
             banned.push(u)
@@ -217,13 +219,14 @@ function filter (toggle, trigger, mutation) { // eslint-disable-line no-unused-v
     }
 
     async function bu (u) {
+        const boundary = "---------------------------11111111111111111111111111111";
         const resp = await fetch(`https://${domain}/u/${u}/block`, {
             signal: AbortSignal.timeout(8000),
             "credentials": "include",
             "headers": {
-                "Content-Type": "multipart/form-data; boundary=---------------------------11111111111111111111111111111"
+                "Content-Type": `multipart/form-data; boundary=${boundary}`
             },
-            "body": `-----------------------------11111111111111111111111111111\r\nContent-Disposition: form-data;`,
+            "body": `${boundary}\r\nContent-Disposition: form-data;`,
             "method": "POST",
             "mode": "cors"
         });
