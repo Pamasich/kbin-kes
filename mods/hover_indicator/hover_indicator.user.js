@@ -1,13 +1,4 @@
 function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
-    // ==UserScript==
-    // @name         Hover Indicator
-    // @namespace    https://github.com/aclist
-    // @version      0.1.0
-    // @description  applies a outline to hovered elements
-    // @author       minnieo
-    // @match        https://kbin.social/*
-    // @license      MIT
-    // ==/UserScript==
     if (toggle) {
         applyOutlines();
     } else {
@@ -16,7 +7,7 @@ function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
 
     function applyOutlines () {
         const settings = getModSettings('hover');
-        const color = getHex(settings.color); // eslint-disable-line no-undef
+        const color = getHex(settings.color);
         const thickness = settings.thickness;
 
         const sels = [
@@ -57,7 +48,18 @@ function hoverIndicator (toggle) { // eslint-disable-line no-unused-vars
         }
         `;
         const exclusions = `
-        li > form > button:hover, li > a, i > span, a > i, a > img, span > i, a > span, span > a, li > i, button > span, li > button, #scroll-top > i {
+        li > form > button:hover, 
+        li > a, 
+        i > span, 
+        a > i, 
+        a > img, 
+        span > i, 
+        a > span, 
+        span > a, 
+        li > i, 
+        button > span, 
+        li > button, 
+        #scroll-top > i {
             outline: none !important;
         }
 
