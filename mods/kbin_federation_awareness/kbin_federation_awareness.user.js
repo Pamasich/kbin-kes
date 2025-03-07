@@ -1,7 +1,4 @@
 function initKFA (toggle) { // eslint-disable-line no-unused-vars
-    //License: MIT
-    //Original Author: CodingAndCoffee (https://kbin.social/u/CodingAndCoffee)
-
     const kfaHasStrictModerationRules = [
         'beehaw.org',
         'lemmy.ml'
@@ -168,14 +165,15 @@ function initKFA (toggle) { // eslint-disable-line no-unused-vars
                 if (comment.querySelector('[class^=data-]')) { return }
                 prependToComment(comment);
             });
-            document.querySelectorAll('.comments blockquote.post-comment').forEach(function (comment) {
+            document.querySelectorAll('.comments blockquote.post-comment').forEach((comment) => {
                 if (comment.querySelector('[class^=data-]')) { return }
                 prependToComment(comment);
             });
             return
         }
         if (page !== Mbin.Microblog) {
-            document.querySelectorAll('#content article.entry:not(.entry-cross)').forEach(function (article) {
+            const css = '#content article.entry:not(.entry-cross)'
+            document.querySelectorAll(css).forEach((article) => {
                 if (article.querySelector('[class^=data-]')) { return }
                 let op = article.querySelector('.user-inline').href
                 op = String(op)
@@ -193,7 +191,7 @@ function initKFA (toggle) { // eslint-disable-line no-unused-vars
                 toggleClass(article, type)
             });
 
-            document.querySelectorAll('.comments blockquote.entry-comment').forEach(function (comment) {
+            document.querySelectorAll('.comments blockquote.entry-comment').forEach((comment) => {
                 if (comment.querySelector('[class^=data-]')) { return }
                 let commentHeader = comment.querySelector('header');
                 const userInfo = commentHeader.querySelector('a.user-inline');
